@@ -6,11 +6,8 @@ import retrofit2.http.Query
 
 interface GuardianApiService {
     @GET("search?show-fields=thumbnail&api-key=f0bbbffe-ebbf-499a-a2e9-ea0fa9d3d48a")
-    suspend fun getGuardianData(): Response<GuardianApiResponse>
-
-    @GET("search?show-fields=thumbnail&api-key=f0bbbffe-ebbf-499a-a2e9-ea0fa9d3d48a")
     suspend fun getGuardianData(
-        @Query("section") section: String
+        @Query("section") section: String?
     ): Response<GuardianApiResponse>
 
 }

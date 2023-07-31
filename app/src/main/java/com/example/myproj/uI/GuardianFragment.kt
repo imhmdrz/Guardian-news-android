@@ -33,7 +33,7 @@ class GuardianFragment(val type : String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycle.coroutineScope.launch{
-            GuardianRepository.getGuardianData()!!.collect(){
+            GuardianRepository.getGuardianData(null)!!.collect(){
                 binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 binding.recyclerView.adapter = RvAdapter(it.response.results)
                 binding.progressBar.visibility = View.GONE

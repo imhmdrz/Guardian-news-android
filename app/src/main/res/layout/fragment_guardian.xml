@@ -14,7 +14,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         tools:listitem="@layout/list_item"
-        tools:itemCount="10"/>
+        tools:itemCount="10" />
 
     <ProgressBar
         android:layout_width="150dp"
