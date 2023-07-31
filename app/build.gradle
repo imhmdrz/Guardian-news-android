@@ -8,7 +8,7 @@ android {
     namespace 'com.example.myproj'
     compileSdk 33
     buildFeatures {
-        dataBinding = true
+        viewBinding true
     }
     defaultConfig {
         applicationId "com.example.myproj"

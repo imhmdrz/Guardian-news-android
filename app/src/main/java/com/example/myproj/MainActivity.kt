@@ -2,20 +2,17 @@ package com.example.myproj
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
-import com.example.myproj.fragmentGuardian.PageAdapter
-import com.google.android.material.tabs.TabLayout
+import com.example.myproj.databinding.ActivityMainBinding
+import com.example.myproj.uI.PageAdapter
 
-
+private lateinit var binding: ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val viewPager = findViewById<ViewPager>(R.id.viewPager)
-        viewPager.adapter = PageAdapter(supportFragmentManager)
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.setupWithViewPager(viewPager)
-
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        binding.viewPager.adapter = PageAdapter(supportFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 }
