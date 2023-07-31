@@ -22,4 +22,13 @@
         android:id="@+id/progressBar"
         android:layout_gravity="center"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tv_error"
+        android:text="NO INTERNET CONNECTION"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
 </FrameLayout>

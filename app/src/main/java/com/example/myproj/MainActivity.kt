@@ -4,11 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import com.example.myproj.databinding.ActivityMainBinding
-import com.example.myproj.uI.GuardianFragment
 import com.example.myproj.uI.PageAdapter
 import com.google.android.material.navigation.NavigationView
 

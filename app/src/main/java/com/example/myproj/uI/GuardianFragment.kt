@@ -5,16 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.repository.GuardianRepository
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
-
 class GuardianFragment(val type : String) : Fragment() {
     companion object {
         fun newInstance(type : String) = GuardianFragment(type)
@@ -29,14 +24,18 @@ class GuardianFragment(val type : String) : Fragment() {
         _binding = FragmentGuardianBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycle.coroutineScope.launch{
             GuardianRepository.getGuardianData(null)!!.collect(){
-                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                binding.recyclerView.adapter = RvAdapter(it.response.results)
-                binding.progressBar.visibility = View.GONE
+                if(it.response == null){
+                    binding.progressBar.visibility = View.GONE
+                    binding.tvError.visibility = View.VISIBLE
+                }else{
+                    binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    binding.recyclerView.adapter = RvAdapter(it.response.results)
+                    binding.progressBar.visibility = View.GONE
+                }
             }
         }
     }
