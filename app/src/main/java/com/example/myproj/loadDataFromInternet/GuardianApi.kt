@@ -1,7 +1,7 @@
 package com.example.myproj.loadDataFromInternet
 
 data class GuardianApiResponse(
-    val response: ApiResponseData
+    val response: ApiResponseData?
 )
 
 data class ApiResponseData(
