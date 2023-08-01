@@ -1,6 +1,7 @@
 package com.example.myproj.repository
 
 
+import android.widget.Toast
 import com.example.myproj.loadDataFromInternet.GuardianApiResponse
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.loadDataFromInternet.RetrofitIns
@@ -19,6 +20,7 @@ object GuardianRepository {
                 emit(retrofitService.getGuardianData(str).body()!!)
             }.catch {
                 emit(GuardianApiResponse(null))
+                Toast.makeText(null, "No Internet Connection", Toast.LENGTH_SHORT).show()
             }
             res
         }

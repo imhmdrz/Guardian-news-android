@@ -32,11 +32,10 @@
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
             android:minLines="2"
             android:text="Galette and berry turnovers: Shivi Ramoutar’s budget recipes with puff pastry"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,18 +51,20 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:src="@mipmap/ic_launcher_round"
+            app:layout_constraintBottom_toTopOf="@+id/button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
         <TextView
             android:id="@+id/tv_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:minLines="4"
+            android:textSize="15sp"
+            android:minLines="3"
             android:text="Puff pastry is a great thing to have to hand for using up all kinds of odds and ends, both savoury and sweet"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,8 +77,7 @@
             android:text="TextView"
             android:textColor="#E89FB7"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_text" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:layout_marginTop="5dp"
@@ -86,8 +86,7 @@
             android:layout_height="20dp"
             android:background="@drawable/iconshare"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
