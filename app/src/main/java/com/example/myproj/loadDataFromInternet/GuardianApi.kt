@@ -32,5 +32,6 @@ data class ApiResult(
 )
 
 data class ThumbnailFields(
-    val thumbnail: String
+    val thumbnail: String,
+    val trailText : String
 )

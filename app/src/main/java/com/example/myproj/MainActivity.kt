@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             viewPager.adapter = PageAdapter(supportFragmentManager)
             tabLayout.setupWithViewPager(binding.viewPager)
             tabLayout
+            viewPager.offscreenPageLimit = 5
         }
         drawerLayout = binding.drawerL
         toggle = ActionBarDrawerToggle(
