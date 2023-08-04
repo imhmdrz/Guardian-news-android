@@ -1,4 +1,4 @@
-package com.example.myproj.loadDataFromInternet
+package com.example.myproj.model
 
 data class GuardianApiResponse(
     val response: ApiResponseData?

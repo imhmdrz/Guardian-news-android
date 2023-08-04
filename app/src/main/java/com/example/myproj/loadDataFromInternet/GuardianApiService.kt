@@ -1,5 +1,6 @@
 package com.example.myproj.loadDataFromInternet
 
+import com.example.myproj.model.GuardianApiResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

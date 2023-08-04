@@ -1,14 +1,12 @@
 package com.example.myproj.repository
 
 
-import android.widget.Toast
-import com.example.myproj.loadDataFromInternet.GuardianApiResponse
+import com.example.myproj.model.GuardianApiResponse
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.loadDataFromInternet.RetrofitIns
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
