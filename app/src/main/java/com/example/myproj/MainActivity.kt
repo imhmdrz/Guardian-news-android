@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.myproj.databinding.ActivityMainBinding
-import com.example.myproj.uI.PageAdapter
+import com.example.myproj.pageAdapter.PageAdapter
 import com.google.android.material.navigation.NavigationView
 
 private lateinit var binding: ActivityMainBinding
@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.environment -> binding.viewPager.currentItem = 4
             }
             drawerLayout.closeDrawers()
-            title = title
             true
         }
     }

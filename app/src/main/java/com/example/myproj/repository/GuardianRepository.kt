@@ -6,6 +6,7 @@ import com.example.myproj.loadDataFromInternet.GuardianApiResponse
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.loadDataFromInternet.RetrofitIns
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -17,10 +18,14 @@ object GuardianRepository {
     private var res: Flow<GuardianApiResponse>? = null
     suspend fun getGuardianData(str: String?): Flow<GuardianApiResponse>? = withContext(Dispatchers.IO) {
             res = flow {
-                emit(retrofitService.getGuardianData(str).body()!!)
-            }.catch {
-                emit(GuardianApiResponse(null))
-                Toast.makeText(null, "No Internet Connection", Toast.LENGTH_SHORT).show()
+                while (true){
+                    try {
+                        emit(retrofitService.getGuardianData(str).body()!!)
+                    }catch (e: Exception){
+                        emit(GuardianApiResponse(null))
+                    }
+                    delay(60000) //refresh every minute
+                }
             }
             res
         }
