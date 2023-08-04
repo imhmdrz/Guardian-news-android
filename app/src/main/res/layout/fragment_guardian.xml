@@ -17,18 +17,21 @@
         tools:itemCount="10" />
 
     <ProgressBar
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/progressBar"
         android:layout_gravity="center"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/tv_error"
-        android:text="NO INTERNET CONNECTION"
+        android:text="NO INTERNET CONNECTION click to retry"
         android:textSize="20sp"
         android:gravity="center"
+        android:layout_gravity="center"
         android:visibility="gone"/>
+
+
 
 </FrameLayout>

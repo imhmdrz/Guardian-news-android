@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.myproj.loadDataFromInternet.ApiResult
 import com.example.myproj.loadDataFromInternet.ThumbnailFields
 import com.example.myproj.repository.GuardianRepository
+import com.example.myproj.utils.apiResultsERROR
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class GuardianViewModel(private val repo: GuardianRepository = GuardianRepository) : ViewModel() {
+
     private var _dataHome: MutableStateFlow<List<ApiResult>> = MutableStateFlow(emptyList())
     val dataHome get() = _dataHome
     private var _dataWorld: MutableStateFlow<List<ApiResult>> = MutableStateFlow(emptyList())
@@ -23,7 +25,7 @@ class GuardianViewModel(private val repo: GuardianRepository = GuardianRepositor
     init {
         getGuardianData()
     }
-
+    fun refreshData() = getGuardianData()
     private fun getGuardianData() {
         viewModelScope.launch {
             repo.getGuardianData(null)!!.collect() {
@@ -55,8 +57,5 @@ class GuardianViewModel(private val repo: GuardianRepository = GuardianRepositor
                 else _dataEnvironment.value = it.response.results
             }
         }
-    }
-    private fun apiResultsERROR() = List(1) {
-        ApiResult("NO INTERNET CONNECTION", "", "", "", "", "", "", "", ThumbnailFields("",""), false, "", "")
     }
 }
