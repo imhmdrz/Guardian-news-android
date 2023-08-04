@@ -1,4 +1,4 @@
-package com.example.myproj.uI
+package com.example.myproj.uiHolder
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.myproj.R
 import com.example.myproj.databinding.ListItemBinding
-import com.example.myproj.loadDataFromInternet.ApiResult
+import com.example.myproj.model.ApiResult
 
 class RvAdapter(
     private val context : Context,
