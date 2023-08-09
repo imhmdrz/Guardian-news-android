@@ -1,4 +1,4 @@
-package com.example.myproj.pageAdapter
+package com.example.myproj.pageDrawerAdapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -11,11 +11,11 @@ class PageAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm) {
     }
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> GuardianFragment("Home")
-            1 -> GuardianFragment("World")
-            2 -> GuardianFragment("Science")
-            3 -> GuardianFragment("Sport")
-            else -> GuardianFragment("Environment")
+            0 -> GuardianFragment.newInstance("Home")
+            1 -> GuardianFragment.newInstance("World")
+            2 -> GuardianFragment.newInstance("Science")
+            3 -> GuardianFragment.newInstance("Sport")
+            else -> GuardianFragment.newInstance("Environment")
         }
     }
     override fun getPageTitle(position: Int): CharSequence? {

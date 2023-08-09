@@ -1,30 +1,56 @@
 package com.example.myproj.repository
 
 
-import com.example.myproj.model.GuardianApiResponse
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.myproj.loadDataFromInternet.GuardianApiService
-import com.example.myproj.loadDataFromInternet.RetrofitIns
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import com.example.myproj.model.ApiResult
+import com.example.myproj.paggingSource.PagingMediator
+import com.example.myproj.roomDataBase.NewsDataBase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 
-object GuardianRepository {
-    private val retrofitService: GuardianApiService = RetrofitIns
-        .getRetrofitInstance().create(GuardianApiService::class.java)
-    private var res: Flow<GuardianApiResponse>? = null
-    suspend fun getGuardianData(str: String?): Flow<GuardianApiResponse>? = withContext(Dispatchers.IO) {
-            res = flow {
-                while (true){
-                    try {
-                        emit(retrofitService.getGuardianData(str).body()!!)
-                    }catch (e: Exception){
-                        emit(GuardianApiResponse(null))
-                    }
-                    delay(60000) //refresh every minute
-                }
-            }
-            res
-        }
+//object GuardianRepository {
+//    private val retrofitService: GuardianApiService = RetrofitIns
+//        .getRetrofitInstance().create(GuardianApiService::class.java)
+//    suspend fun getGuardianData(str: String?): Flow<PagingData<ApiResult>> = withContext(Dispatchers.IO) {
+//            Pager(
+//                config = PagingConfig(
+//                    pageSize = 10,
+//                    enablePlaceholders = false
+//                ),
+//                pagingSourceFactory = { PagingSource(retrofitService, str) }
+//            ).flow
+//        }
+//    }
+class GuardianRepository(private val apiService: GuardianApiService,
+                         private val db : NewsDataBase){
+    @OptIn(ExperimentalPagingApi::class)
+    fun getGuardianDataBySection(section: String): Flow<PagingData<ApiResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            remoteMediator = PagingMediator(
+                section,
+                apiService,
+                db
+            ),
+            pagingSourceFactory = { db.newsDao().getData(section) }
+        ).flow
+    }
+    @OptIn(ExperimentalPagingApi::class)
+    fun getGuardianData(): Flow<PagingData<ApiResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            remoteMediator = PagingMediator(
+                null,
+                apiService,
+                db
+            ),
+            pagingSourceFactory = { db.newsDao().getAllData() }
+        ).flow
+    }
+    companion object {
+        private const val PAGE_SIZE = 10
+    }
 }

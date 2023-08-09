@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.myproj.databinding.ActivityMainBinding
-import com.example.myproj.pageAdapter.PageAdapter
+import com.example.myproj.pageDrawerAdapter.PageAdapter
 import com.google.android.material.navigation.NavigationView
 
 private lateinit var binding: ActivityMainBinding

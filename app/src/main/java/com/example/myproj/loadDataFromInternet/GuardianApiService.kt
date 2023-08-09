@@ -8,6 +8,7 @@ import retrofit2.http.Query
 interface GuardianApiService {
     @GET("search?show-fields=thumbnail%2CtrailText&api-key=74d64ca2-bd49-4c1f-99c5-778c6af08086")
     suspend fun getGuardianData(
-        @Query("section") section: String?
+        @Query("section") section: String?,
+        @Query("page") page: Int?
     ): Response<GuardianApiResponse>
 }
