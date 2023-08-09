@@ -1,5 +1,9 @@
 package com.example.myproj.uiHolder
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -71,7 +75,24 @@ class GuardianFragment(private val type: String) : Fragment() {
             }
         }
     }
+    private fun isInternetConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+
+            return when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -81,7 +102,6 @@ class GuardianFragment(private val type: String) : Fragment() {
         when (it) {
             is GuardianUiState.Success -> {
                 binding.progressBar.visibility = View.GONE
-                binding.tvError.visibility = View.GONE
                 rvAdapter = RvPagingAdapter(requireContext())
                 binding.recyclerView.apply {
                     layoutManager = LinearLayoutManager(context)
@@ -97,10 +117,10 @@ class GuardianFragment(private val type: String) : Fragment() {
                 lifecycleScope.launch {
                     rvAdapter.loadStateFlow.collect { loadState ->
                         val isListEmpty = loadState.refresh is LoadState.NotLoading && rvAdapter.itemCount == 0
+                        binding.tvError.isVisible = loadState.source.append is LoadState.Error
                         binding.recyclerView.isVisible = !isListEmpty
                         binding.tvError.setOnClickListener { rvAdapter.retry() }
                         binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                        binding.tvError.isVisible = loadState.source.refresh is LoadState.Error
                         val errorState = loadState.source.append as? LoadState.Error
                             ?: loadState.source.prepend as? LoadState.Error
                             ?: loadState.append as? LoadState.Error

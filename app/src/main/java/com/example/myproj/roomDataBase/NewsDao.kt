@@ -10,20 +10,17 @@ import com.example.myproj.model.ApiResult
 @Dao
 interface NewsDao {
     @Insert(entity = ApiResult::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertData(data: ApiResult)
-
-    @Insert(entity = ApiResult::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(repos: List<ApiResult>)
 
     @Query("SELECT * FROM resApi WHERE sectionName = :section OR sectionId = :section" +
             " ORDER BY webPublicationDate DESC")
     fun getData(section : String) : PagingSource<Int, ApiResult>
 
-    @Query("SELECT * FROM resApi")
+    @Query("SELECT * FROM resApi ORDER BY webPublicationDate DESC")
     fun getAllData() : PagingSource<Int,ApiResult>
 
     @Query("DELETE FROM resApi WHERE sectionName = :section")
-    suspend fun deleteData(section : String)
+    suspend fun deleteData(section : String?)
 
     @Query("DELETE FROM resApi")
     suspend fun deleteAllData()

@@ -24,10 +24,8 @@ class GuardianViewModel (private val repo: GuardianRepository,
         List(5) { MutableStateFlow(GuardianUiState.Loading) }
     val uiState: List<MutableStateFlow<GuardianUiState>> get() = _uiState
     init {
-
         getGuardianData()
     }
-    fun refreshData() = getGuardianData()
     private fun getGuardianData() {
         repo.getGuardianData().cachedIn(viewModelScope)
             .let {
