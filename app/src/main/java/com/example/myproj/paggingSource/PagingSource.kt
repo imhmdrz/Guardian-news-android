@@ -1,5 +1,6 @@
 package com.example.myproj.paggingSource
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -48,11 +49,12 @@ class PagingMediator(
                 nextKey
             }
         }
+        Log.d("PagingMediator", "load: $page $loadType")
         delay(2000)
         try {
-            var endOfPageReached = false
             val response = apiService.getGuardianData(section, page)
-            endOfPageReached = response.body()?.response?.currentPage == 100
+            val endOfPageReached = response.body()?.response?.results?.isEmpty() == true
+            Log.d("PagingMediator", "PagingMediator: $page $endOfPageReached")
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     db.remoteKeysDao().clearRemoteKeysSection(section)

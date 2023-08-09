@@ -29,10 +29,14 @@ abstract class NewsDataBase:RoomDatabase(){
                 INSTANCE
                     ?: buildDatabase(context).also { INSTANCE = it }
             }
+        fun refreshInstance(context: Context):NewsDataBase {
+            INSTANCE = null
+            return buildDatabase(context).also { INSTANCE = it }
+        }
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                NewsDataBase::class.java, "News5.db"
+                NewsDataBase::class.java, "News10.db"
             )
                 .fallbackToDestructiveMigration()
                 .build()
