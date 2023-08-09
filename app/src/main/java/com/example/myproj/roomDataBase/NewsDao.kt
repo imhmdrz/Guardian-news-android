@@ -15,7 +15,8 @@ interface NewsDao {
     @Insert(entity = ApiResult::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(repos: List<ApiResult>)
 
-    @Query("SELECT * FROM resApi WHERE sectionName = :section OR sectionId = :section")
+    @Query("SELECT * FROM resApi WHERE sectionName = :section OR sectionId = :section" +
+            " ORDER BY webPublicationDate DESC")
     fun getData(section : String) : PagingSource<Int, ApiResult>
 
     @Query("SELECT * FROM resApi")

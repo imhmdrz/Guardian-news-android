@@ -22,6 +22,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "remote_keys")
 data class RemoteKeys(
     @PrimaryKey val NewsId: String,
+    val section :String?,
     val prevKey: Int?,
     val nextKey: Int?
 )

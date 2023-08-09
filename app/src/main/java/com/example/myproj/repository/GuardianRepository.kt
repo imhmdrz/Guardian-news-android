@@ -11,19 +11,6 @@ import com.example.myproj.paggingSource.PagingMediator
 import com.example.myproj.roomDataBase.NewsDataBase
 import kotlinx.coroutines.flow.Flow
 
-//object GuardianRepository {
-//    private val retrofitService: GuardianApiService = RetrofitIns
-//        .getRetrofitInstance().create(GuardianApiService::class.java)
-//    suspend fun getGuardianData(str: String?): Flow<PagingData<ApiResult>> = withContext(Dispatchers.IO) {
-//            Pager(
-//                config = PagingConfig(
-//                    pageSize = 10,
-//                    enablePlaceholders = false
-//                ),
-//                pagingSourceFactory = { PagingSource(retrofitService, str) }
-//            ).flow
-//        }
-//    }
 class GuardianRepository(private val apiService: GuardianApiService,
                          private val db : NewsDataBase){
     @OptIn(ExperimentalPagingApi::class)

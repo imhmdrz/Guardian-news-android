@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
@@ -19,11 +20,12 @@ import com.example.myproj.loadDataFromInternet.RetrofitIns
 import com.example.myproj.model.ApiResult
 import com.example.myproj.repository.GuardianRepository
 import com.example.myproj.roomDataBase.NewsDataBase
+import com.example.myproj.uiHolder.Injection.provideViewModelFactory
 import com.example.myproj.uiState.GuardianUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class GuardianFragment(val type: String) : Fragment() {
+class GuardianFragment(private val type: String) : Fragment() {
     companion object {
         fun newInstance(type: String) = GuardianFragment(type)
     }
@@ -42,32 +44,27 @@ class GuardianFragment(val type: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val factory = GuardianViewModelFactory(GuardianRepository(
-            apiService = RetrofitIns.getRetrofitInstance().create(GuardianApiService::class.java),
-            db = NewsDataBase.getInstance(requireContext()))
-        )
         viewModel = ViewModelProvider(
-            this,
-            factory
+            this , provideViewModelFactory(
+                context = requireContext(),
+                owner = this,
+                section = type
+            )
         ).get(GuardianViewModel::class.java)
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             when (type) {
                 "Home" -> viewModel.uiState[0].collect() {
                     uIProvider(it)
                 }
-
                 "World" -> viewModel.uiState[1].collect() {
                     uIProvider(it)
                 }
-
                 "Science" -> viewModel.uiState[2].collect() {
                     uIProvider(it)
                 }
-
                 "Sport" -> viewModel.uiState[3].collect() {
                     uIProvider(it)
                 }
-
                 "Environment" -> viewModel.uiState[4].collect() {
                     uIProvider(it)
                 }
@@ -88,47 +85,38 @@ class GuardianFragment(val type: String) : Fragment() {
                 rvAdapter = RvPagingAdapter(requireContext())
                 binding.recyclerView.apply {
                     layoutManager = LinearLayoutManager(context)
-                    adapter = rvAdapter
+                    adapter = rvAdapter.withLoadStateHeaderAndFooter(
+                        header = LoadStateAdapter { rvAdapter.retry() },
+                        footer = LoadStateAdapter { rvAdapter.retry() }
+                    )
                     visibility = View.VISIBLE
                 }
-                it.data.collect(){
+                it.data.collectLatest {
                     rvAdapter.submitData(it)
                 }
-                rvAdapter.loadStateFlow.collectLatest {
-                    if (it.refresh is LoadState.Error) {
-                        binding.tvError.visibility = View.VISIBLE
-                        binding.tvError.text = it.refresh.toString()
-                        when(it.refresh){
-                            is LoadState.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
-                            is LoadState.NotLoading -> {
-                                binding.progressBar.visibility = View.GONE
-                            }
-                            is LoadState.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                binding.tvError.visibility = View.VISIBLE
-                                binding.tvError.text = it.refresh.toString()
-                            }
+                lifecycleScope.launch {
+                    rvAdapter.loadStateFlow.collect { loadState ->
+                        val isListEmpty = loadState.refresh is LoadState.NotLoading && rvAdapter.itemCount == 0
+                        binding.recyclerView.isVisible = !isListEmpty
+                        binding.tvError.setOnClickListener { rvAdapter.retry() }
+                        binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        binding.tvError.isVisible = loadState.source.refresh is LoadState.Error
+                        val errorState = loadState.source.append as? LoadState.Error
+                            ?: loadState.source.prepend as? LoadState.Error
+                            ?: loadState.append as? LoadState.Error
+                            ?: loadState.prepend as? LoadState.Error
+                        errorState?.let {
+                            Toast.makeText(
+                                requireContext(),
+                                "\uD83D\uDE28 Wooops ${it.error}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }
             }
 
-            is GuardianUiState.Error -> {
-                binding.progressBar.visibility = View.GONE
-                binding.recyclerView.visibility = View.GONE
-                binding.tvError.visibility = View.VISIBLE
-//                binding.tvError.setOnClickListener {
-//                    viewModel.refreshData()
-//                }
-            }
-
-            is GuardianUiState.Loading -> {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.recyclerView.visibility = View.GONE
-                binding.tvError.visibility = View.GONE
-            }
+            else -> {}
         }
     }
 }

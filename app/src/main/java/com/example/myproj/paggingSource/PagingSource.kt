@@ -8,8 +8,13 @@ import androidx.room.withTransaction
 import com.example.android.codelabs.paging.db.RemoteKeys
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
+import com.example.myproj.model.GuardianApiResponse
 import com.example.myproj.roomDataBase.NewsDataBase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
@@ -27,43 +32,35 @@ class PagingMediator(
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with `endOfPaginationReached = false` because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
-                // the end of pagination for prepend.
                 val prevKey = remoteKeys?.prevKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with `endOfPaginationReached = false` because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its nextKey is null, that means we've reached
-                // the end of pagination for append.
                 val nextKey = remoteKeys?.nextKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
+        delay(3000)
         try {
-            val response = apiService.getGuardianData(section, page)
-            val result = response.body()?.response?.results
-            db.withTransaction {
-                // clear all tables in the database
-                if (loadType == LoadType.REFRESH) {
-                    db.remoteKeysDao().clearRemoteKeys()
-                    //db.newsDao().deleteAllData()
+            val response: Response<GuardianApiResponse>
+            withContext(Dispatchers.IO){
+                response = apiService.getGuardianData(section, page)
+                val result = response.body()?.response?.results
+                db.withTransaction {
+                    if (loadType == LoadType.REFRESH) {
+                        db.remoteKeysDao().clearRemoteKeys()
+                    }
+                    val prevKey = if (page == 1) null else page - 1
+                    val nextKey = if (response.body()?.response?.results?.isEmpty() == true) null else page + 1
+                    val keys = result?.map {
+                        RemoteKeys(NewsId = it.id, section , prevKey = prevKey, nextKey = nextKey)
+                    }
+                    db.remoteKeysDao().insertAll(keys ?: emptyList())
+                    db.newsDao().insertAll(result ?: emptyList())
                 }
-                val prevKey = if (page == 1) null else page - 1
-                val nextKey = if (response.body()?.response?.results?.isEmpty() == true) null else page + 1
-                val keys = result?.map {
-                    RemoteKeys(NewsId = it.id, prevKey = prevKey, nextKey = nextKey)
-                }
-                db.remoteKeysDao().insertAll(keys ?: emptyList())
-                db.newsDao().insertAll(result ?: emptyList())
             }
             return MediatorResult.Success(endOfPaginationReached = response.body()?.response?.results?.isEmpty() == true)
         } catch (e: IOException) {
@@ -73,31 +70,23 @@ class PagingMediator(
         }
     }
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
-        // Get the last page that was retrieved, that contained items.
-        // From that last page, get the last item
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { ApiResult ->
-                // Get the remote keys of the last item retrieved
-                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id,section)
             }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
-        // Get the first page that was retrieved, that contained items.
-        // From that first page, get the first item
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { ApiResult ->
-                // Get the remote keys of the first items retrieved
-                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id,section)
             }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ApiResult>): RemoteKeys? {
-        // The paging library is trying to load data after the anchor position
-        // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { ApiResultID ->
-                db.remoteKeysDao().remoteKeysRepoId(ApiResultID)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResultID,section)
             }
         }
     }
