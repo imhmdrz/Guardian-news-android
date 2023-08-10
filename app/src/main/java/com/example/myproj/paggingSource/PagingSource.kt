@@ -54,10 +54,11 @@ class PagingMediator(
         try {
             val response = apiService.getGuardianData(section, page, state.config.pageSize)
             val endOfPageReached = response.body()?.response?.results?.isEmpty() == true
+            Log.d("PagingMediator", "load: ${response.body()?.response?.results} ")
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    db.remoteKeysDao().clearRemoteKeys()
-                    db.newsDao().deleteAllData()
+                    db.remoteKeysDao().clearRemoteKeys(section)
+                    db.newsDao().deleteData(section)
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPageReached) null else page + 1
@@ -70,7 +71,7 @@ class PagingMediator(
                     )
                 }
                 db.remoteKeysDao().insertAll(keys)
-                db.newsDao().insertAll(response.body()?.response?.results ?: emptyList())
+                db.newsDao().insertAll(response.body()?.response?.results ?: listOf())
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPageReached)
         } catch (e: IOException) {

@@ -32,4 +32,7 @@ interface RemoteKeysDao {
 
     @Query("DELETE FROM remote_keys")
     suspend fun clearRemoteKeys()
+
+    @Query("DELETE FROM remote_keys WHERE section = :section")
+    suspend fun clearRemoteKeys(section: String?)
 }

@@ -19,7 +19,6 @@ class GuardianViewModel (private val repo: GuardianRepository,
                          private val savedStateHandle: SavedStateHandle,
                          private val section:String?) : ViewModel() {
 
-    //val pagingDataFlow: Flow<PagingData<ApiResult>>
     private val _uiState: List<MutableStateFlow<GuardianUiState>> =
         List(5) { MutableStateFlow(GuardianUiState.Loading) }
     val uiState: List<MutableStateFlow<GuardianUiState>> get() = _uiState
