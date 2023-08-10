@@ -52,13 +52,12 @@ class PagingMediator(
         Log.d("PagingMediator", "load: $page $loadType")
         delay(2000)
         try {
-            val response = apiService.getGuardianData(section, page)
+            val response = apiService.getGuardianData(section, page, state.config.pageSize)
             val endOfPageReached = response.body()?.response?.results?.isEmpty() == true
-            Log.d("PagingMediator", "PagingMediator: $page $endOfPageReached")
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    db.remoteKeysDao().clearRemoteKeysSection(section)
-                    db.newsDao().deleteData(section)
+                    db.remoteKeysDao().clearRemoteKeys()
+                    db.newsDao().deleteAllData()
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPageReached) null else page + 1
@@ -82,7 +81,7 @@ class PagingMediator(
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
-        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { ApiResult ->
                 db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
             }

@@ -16,7 +16,7 @@ class GuardianRepository(private val apiService: GuardianApiService,
     @OptIn(ExperimentalPagingApi::class)
     fun getGuardianDataBySection(section: String): Flow<PagingData<ApiResult>> {
         return Pager(
-            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false, maxSize = 50),
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             remoteMediator = PagingMediator(
                 section,
                 apiService,
@@ -28,7 +28,7 @@ class GuardianRepository(private val apiService: GuardianApiService,
     @OptIn(ExperimentalPagingApi::class)
     fun getGuardianData(): Flow<PagingData<ApiResult>> {
         return Pager(
-            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false,maxSize = 50),
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             remoteMediator = PagingMediator(
                 null,
                 apiService,

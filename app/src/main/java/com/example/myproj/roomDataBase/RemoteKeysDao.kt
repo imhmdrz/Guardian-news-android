@@ -30,12 +30,6 @@ interface RemoteKeysDao {
     @Query("SELECT * FROM remote_keys WHERE NewsId = :newsId")
     suspend fun remoteKeysRepoId(newsId: String): RemoteKeys?
 
-    @Query("SELECT * FROM remote_keys WHERE section = :section")
-    suspend fun remoteKeysSection(section: String?): RemoteKeys?
-
     @Query("DELETE FROM remote_keys")
     suspend fun clearRemoteKeys()
-
-    @Query("DELETE FROM remote_keys WHERE section = :section")
-    suspend fun clearRemoteKeysSection(section: String?)
 }
