@@ -17,15 +17,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myproj.databinding.FragmentGuardianBinding
-import com.example.myproj.loadDataFromInternet.GuardianApiService
-import com.example.myproj.loadDataFromInternet.RetrofitIns
 import com.example.myproj.model.ApiResult
-import com.example.myproj.repository.GuardianRepository
-import com.example.myproj.roomDataBase.NewsDataBase
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
 import com.example.myproj.uiState.GuardianUiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -33,6 +32,7 @@ class GuardianFragment(private val type: String) : Fragment() {
     companion object {
         fun newInstance(type: String) = GuardianFragment(type)
     }
+
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
     private var _binding: FragmentGuardianBinding? = null
@@ -49,94 +49,66 @@ class GuardianFragment(private val type: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
-            this , provideViewModelFactory(
+            this, provideViewModelFactory(
                 context = requireContext(),
-                owner = this,
-                section = type
+                owner = this
             )
         ).get(GuardianViewModel::class.java)
+        when (type) {
+            "Home" -> lifecycleScope.launch {
+                viewModel.guardianData.collect(){
+                    uiRender(it)
+                }
+            }
+
+            "World" -> lifecycleScope.launch {
+                viewModel.guardianDataBySection.collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Science" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionScience.collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Sport" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionSport.collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Environment" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionEnvironment.collect(){
+                    uiRender(it)
+                }
+            }
+        }
+    }
+
+    private fun uiRender(it: PagingData<ApiResult>) {
+        binding.progressBar.visibility = View.GONE
+        rvAdapter = RvPagingAdapter(requireContext(), type)
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = rvAdapter.withLoadStateFooter(
+                footer = LoadStateAdapter { rvAdapter.retry() }
+            )
+            visibility = View.VISIBLE
+        }
         lifecycleScope.launch {
-            when (type) {
-                "Home" -> viewModel.uiState[0].collect() {
-                    uIProvider(it)
-                }
-                "World" -> viewModel.uiState[1].collect() {
-                    uIProvider(it)
-                }
-                "Science" -> viewModel.uiState[2].collect() {
-                    uIProvider(it)
-                }
-                "Sport" -> viewModel.uiState[3].collect() {
-                    uIProvider(it)
-                }
-                "Environment" -> viewModel.uiState[4].collect() {
-                    uIProvider(it)
-                }
+            rvAdapter.submitData(it)
+        }
+        lifecycleScope.launch {
+            rvAdapter.loadStateFlow.collect { loadState ->
+                binding.tvError.isVisible = loadState.source.append is LoadState.Error
             }
         }
     }
-    private fun isInternetConnected(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val networkCapabilities = connectivityManager.activeNetwork ?: return false
-            val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-
-            return when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            val activeNetworkInfo = connectivityManager.activeNetworkInfo
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected
-        }
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private suspend fun uIProvider(it: GuardianUiState) {
-        when (it) {
-            is GuardianUiState.Success -> {
-                binding.progressBar.visibility = View.GONE
-                rvAdapter = RvPagingAdapter(requireContext())
-                binding.recyclerView.apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = rvAdapter.withLoadStateHeaderAndFooter(
-                        header = LoadStateAdapter { rvAdapter.retry() },
-                        footer = LoadStateAdapter { rvAdapter.retry() }
-                    )
-                    visibility = View.VISIBLE
-                }
-                it.data.collectLatest {
-                    rvAdapter.submitData(it)
-                }
-                lifecycleScope.launch {
-                    rvAdapter.loadStateFlow.collect { loadState ->
-                        val isListEmpty = loadState.refresh is LoadState.NotLoading && rvAdapter.itemCount == 0
-                        binding.tvError.isVisible = loadState.source.append is LoadState.Error
-                        binding.recyclerView.isVisible = !isListEmpty
-                        binding.tvError.setOnClickListener { rvAdapter.retry() }
-                        binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                        val errorState = loadState.source.append as? LoadState.Error
-                            ?: loadState.source.prepend as? LoadState.Error
-                            ?: loadState.append as? LoadState.Error
-                            ?: loadState.prepend as? LoadState.Error
-                        errorState?.let {
-                            Toast.makeText(
-                                requireContext(),
-                                "\uD83D\uDE28 Wooops ${it.error}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                }
-            }
-
-            else -> {}
-        }
     }
 }

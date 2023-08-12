@@ -28,10 +28,11 @@ object Injection {
     private fun provideGithubRepository(context: Context): GuardianRepository {
         return GuardianRepository(
             apiService = RetrofitIns.getRetrofitInstance().create(GuardianApiService::class.java),
-            db = NewsDataBase.getInstance(context)
+            db = NewsDataBase.getInstance(context),
+            context = context
         )
     }
-    fun provideViewModelFactory(context: Context, owner: SavedStateRegistryOwner,section:String?): ViewModelProvider.Factory {
-        return GuardianViewModelFactory(owner, provideGithubRepository(context),section)
+    fun provideViewModelFactory(context: Context, owner: SavedStateRegistryOwner): ViewModelProvider.Factory {
+        return GuardianViewModelFactory(owner, provideGithubRepository(context))
     }
 }

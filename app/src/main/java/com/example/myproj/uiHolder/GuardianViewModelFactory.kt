@@ -8,8 +8,7 @@ import com.example.myproj.repository.GuardianRepository
 
 class GuardianViewModelFactory(
     owner: SavedStateRegistryOwner,
-    private val repo: GuardianRepository,
-    private val section: String?
+    private val repo: GuardianRepository
 ) : AbstractSavedStateViewModelFactory(owner, null) {
     override fun <T : ViewModel> create(
         key: String,
@@ -18,7 +17,7 @@ class GuardianViewModelFactory(
     ): T {
         if (modelClass.isAssignableFrom(GuardianViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GuardianViewModel(repo, handle, section) as T
+            return GuardianViewModel(repo, handle) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
