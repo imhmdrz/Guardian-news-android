@@ -1,13 +1,18 @@
 package com.example.myproj
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.myproj.databinding.ActivityMainBinding
 import com.example.myproj.pageDrawerAdapter.PageAdapter
+import com.example.myproj.uiHolder.setting.SettingFragment
 import com.google.android.material.navigation.NavigationView
+
 
 private lateinit var binding: ActivityMainBinding
 private lateinit var toggle: ActionBarDrawerToggle
@@ -19,8 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.apply {
             viewPager.adapter = PageAdapter(supportFragmentManager)
-            tabLayout.setupWithViewPager(binding.viewPager)
-            tabLayout
+            tabLayout.setupWithViewPager(binding.viewPager, true)
             viewPager.offscreenPageLimit = 5
         }
         drawerLayout = binding.drawerL
@@ -49,10 +53,33 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu)
+        return true
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)){
             return true
         }
+        when (item.itemId) {
+            R.id.setting -> {
+                binding.navView.visibility = View.GONE
+                binding.tabLayout.visibility = View.GONE
+                binding.viewPager.visibility = View.GONE
+                item.isVisible = false
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.drawerL, SettingFragment())
+                    .addToBackStack("setting")
+                    .commit()
+            }
+        }
         return super.onOptionsItemSelected(item)
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        binding.navView.visibility = View.VISIBLE
+        binding.tabLayout.visibility = View.VISIBLE
+        binding.viewPager.visibility = View.VISIBLE
     }
 }
