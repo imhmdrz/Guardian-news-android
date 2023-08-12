@@ -19,13 +19,15 @@ import androidx.paging.PagingDataAdapter
 
 
 
-class RvPagingAdapter(private val context : Context) : PagingDataAdapter<ApiResult, RvPagingAdapter.ViewHolder>(diffCallback) {
+class RvPagingAdapter(private val context : Context,
+                      private val section: String? = null
+) : PagingDataAdapter<ApiResult, RvPagingAdapter.ViewHolder>(diffCallback) {
     inner class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
             binding.apply {
                 tvTitle.text = item.webTitle
-                tvSection.text = item.sectionId
+                tvSection.text = section
                 tvText.text = item.fields.trailText.replace("<.*?>".toRegex(), "")
                 val date = item.webPublicationDate.substring(0, 10)
                 val time = item.webPublicationDate.substring(11, 16)

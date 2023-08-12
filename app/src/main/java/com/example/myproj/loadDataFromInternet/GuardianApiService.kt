@@ -12,6 +12,8 @@ interface GuardianApiService {
     suspend fun getGuardianData(
         @Query("section") section: String?,
         @Query("page") page: Int?,
-        @Query("page-size") pageSize: Int = 10
+        @Query("page-size") pageSize: Int = 10,
+        @Query("order-by") orderBy: String = "newest",
+        @Query("from-date") fromDate: String = "2021-01-01"
     ): Response<GuardianApiResponse>
 }

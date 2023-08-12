@@ -58,7 +58,16 @@ class PagingMediator(
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     db.remoteKeysDao().clearRemoteKeys(section)
-                    db.newsDao().deleteData(section)
+                    if(section == null){
+                        val listFiltered = response.body()?.response?.results?.filter {
+                            it.sectionId != "science" && it.sectionName != "world" && it.sectionName != "sport" && it.sectionName != "environment"
+                        }
+                        db.newsDao().deleteAllData(listFiltered ?: emptyList())
+                    }else{
+                        db.newsDao().deleteData(section)
+                    }
+
+                    Log.d("PagingMediator", "load 2:$section ${response.body()?.response?.results} ")
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPageReached) null else page + 1
@@ -70,8 +79,27 @@ class PagingMediator(
                         nextKey = nextKey
                     )
                 }
-                db.remoteKeysDao().insertAll(keys)
-                db.newsDao().insertAll(response.body()?.response?.results ?: listOf())
+                withContext(Dispatchers.IO){
+                    if(section == null){
+                        delay(1500)
+                        val keysFiltered = keys?.filter {
+                            it.section != "world" && it.section != "science" && it.section != "sport" && it.section != "environment"
+                        }
+                        val listFiltered = response.body()?.response?.results?.filter {
+                            it.sectionId != "science" && it.sectionName != "world" && it.sectionName != "sport" && it.sectionName != "environment"
+                        }
+                        db.remoteKeysDao().insertAll(keysFiltered)
+                        Log.d("PagingMediator", "load 3:$section ${response.body()?.response?.results} ")
+                        db.newsDao().insertAll(listFiltered ?: listOf())
+                        Log.d("PagingMediator", "load 4: ${response.body()?.response?.results} ")
+                    }else{
+                        db.remoteKeysDao().insertAll(keys)
+                        Log.d("PagingMediator", "load 3:$section ${response.body()?.response?.results} ")
+                        db.newsDao().insertAll(response.body()?.response?.results ?: listOf())
+                        Log.d("PagingMediator", "load 4: ${response.body()?.response?.results} ")
+                    }
+
+                }
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPageReached)
         } catch (e: IOException) {
@@ -84,6 +112,9 @@ class PagingMediator(
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { ApiResult ->
+                Log.d("PagingMediator", "load 5: ${ApiResult.id} ")
+
+                Log.d("PagingMediator", "load 5: ${ApiResult.id} ")
                 db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
             }
     }
