@@ -2,6 +2,7 @@ package com.example.myproj.repository
 
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.createDataStore
@@ -17,9 +18,11 @@ import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
 import com.example.myproj.paggingSource.PagingMediator
 import com.example.myproj.roomDataBase.NewsDataBase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -33,17 +36,8 @@ class GuardianRepository(
     private val dataStore: DataStore<Preferences> = context.createDataStore(
         name = "settings"
     )
-    private var pageSize: Int = 10
-    suspend fun collectPageSize() {
-        dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.numberOfItem] ?: "10"
-        }.collect {
-            pageSize = it.toInt()
-        }
-    }
-
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianData(): Flow<PagingData<ApiResult>> {
+    fun getGuardianData(pageSize : Int): Flow<PagingData<ApiResult>> {
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
@@ -61,8 +55,7 @@ class GuardianRepository(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianDataBySection(section: String): Flow<PagingData<ApiResult>> {
-
+    fun getGuardianDataBySection(section: String,pageSize : Int): Flow<PagingData<ApiResult>> {
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,

@@ -22,17 +22,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
-import com.example.myproj.uiState.GuardianUiState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class GuardianFragment(private val type: String) : Fragment() {
+class GuardianFragment() : Fragment() {
     companion object {
-        fun newInstance(type: String) = GuardianFragment(type)
+        fun newInstance(type: String?) = GuardianFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putString("type", type)
+                }
+            }
     }
-
+    private val type: String by lazy { arguments?.getString("type") ?: "Home"}
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
     private var _binding: FragmentGuardianBinding? = null
@@ -54,41 +55,6 @@ class GuardianFragment(private val type: String) : Fragment() {
                 owner = this
             )
         ).get(GuardianViewModel::class.java)
-        when (type) {
-            "Home" -> lifecycleScope.launch {
-                viewModel.guardianData.collect(){
-                    uiRender(it)
-                }
-            }
-
-            "World" -> lifecycleScope.launch {
-                viewModel.guardianDataBySection.collect(){
-                    uiRender(it)
-                }
-            }
-
-            "Science" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionScience.collect(){
-                    uiRender(it)
-                }
-            }
-
-            "Sport" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionSport.collect(){
-                    uiRender(it)
-                }
-            }
-
-            "Environment" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionEnvironment.collect(){
-                    uiRender(it)
-                }
-            }
-        }
-    }
-
-    private fun uiRender(it: PagingData<ApiResult>) {
-        binding.progressBar.visibility = View.GONE
         rvAdapter = RvPagingAdapter(requireContext(), type)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -97,12 +63,59 @@ class GuardianFragment(private val type: String) : Fragment() {
             )
             visibility = View.VISIBLE
         }
+        when (type) {
+            "Home" -> lifecycleScope.launch {
+                viewModel.guardianDataHome().collect{
+                    uiRender(it)
+                }
+            }
+
+            "World" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionWorld().collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Science" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionScience().collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Sport" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionSport().collect(){
+                    uiRender(it)
+                }
+            }
+
+            "Environment" -> lifecycleScope.launch {
+                viewModel.guardianDataBySectionEnvironment().collect(){
+                    uiRender(it)
+                }
+            }
+        }
+    }
+
+    private fun uiRender(it: PagingData<ApiResult>) {
+        binding.progressBar.visibility = View.GONE
         lifecycleScope.launch {
             rvAdapter.submitData(it)
         }
         lifecycleScope.launch {
             rvAdapter.loadStateFlow.collect { loadState ->
-                binding.tvError.isVisible = loadState.source.append is LoadState.Error
+                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+                binding.recyclerView.isVisible = loadState.refresh !is LoadState.Loading
+                binding.tvError.isVisible = loadState.refresh is LoadState.Error
+                val errorState = loadState.refresh as? LoadState.Error
+                    ?: loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                errorState?.let {
+                    Toast.makeText(
+                        requireContext(),
+                        "\uD83D\uDE28 Wooops ${it.error}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }

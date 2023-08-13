@@ -31,11 +31,13 @@ class PagingMediator(
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
+                Log.d("PagingMediator", "load 1:${LoadType.REFRESH} ")
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: 1
             }
 
             LoadType.PREPEND -> {
+                Log.d("PagingMediator", "load 2:${LoadType.PREPEND} ")
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
@@ -43,31 +45,27 @@ class PagingMediator(
             }
 
             LoadType.APPEND -> {
+                Log.d("PagingMediator", "load 3:${LoadType.APPEND} ")
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
-        Log.d("PagingMediator", "load: $page $loadType")
+
+
         delay(2000)
         try {
             val response = apiService.getGuardianData(section, page, state.config.pageSize)
             val endOfPageReached = response.body()?.response?.results?.isEmpty() == true
-            Log.d("PagingMediator", "load: ${response.body()?.response?.results} ")
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     db.remoteKeysDao().clearRemoteKeys(section)
                     if(section == null){
-                        val listFiltered = response.body()?.response?.results?.filter {
-                            it.sectionId != "science" && it.sectionName != "world" && it.sectionName != "sport" && it.sectionName != "environment"
-                        }
-                        db.newsDao().deleteAllData(listFiltered ?: emptyList())
+                        db.newsDao().deleteAllData()
                     }else{
                         db.newsDao().deleteData(section)
                     }
-
-                    Log.d("PagingMediator", "load 2:$section ${response.body()?.response?.results} ")
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPageReached) null else page + 1
@@ -89,14 +87,10 @@ class PagingMediator(
                             it.sectionId != "science" && it.sectionName != "world" && it.sectionName != "sport" && it.sectionName != "environment"
                         }
                         db.remoteKeysDao().insertAll(keysFiltered)
-                        Log.d("PagingMediator", "load 3:$section ${response.body()?.response?.results} ")
                         db.newsDao().insertAll(listFiltered ?: listOf())
-                        Log.d("PagingMediator", "load 4: ${response.body()?.response?.results} ")
                     }else{
                         db.remoteKeysDao().insertAll(keys)
-                        Log.d("PagingMediator", "load 3:$section ${response.body()?.response?.results} ")
                         db.newsDao().insertAll(response.body()?.response?.results ?: listOf())
-                        Log.d("PagingMediator", "load 4: ${response.body()?.response?.results} ")
                     }
 
                 }
@@ -112,9 +106,6 @@ class PagingMediator(
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { ApiResult ->
-                Log.d("PagingMediator", "load 5: ${ApiResult.id} ")
-
-                Log.d("PagingMediator", "load 5: ${ApiResult.id} ")
                 db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
             }
     }
