@@ -23,6 +23,7 @@ interface NewsDao {
     @Query("DELETE FROM resApi WHERE sectionId LIKE :section OR sectionName LIKE :section")
     suspend fun deleteData(section : String)
 
-    @Delete
-    suspend fun deleteAllData(list : List<ApiResult> = emptyList())
+    @Query("DELETE FROM resApi WHERE sectionId NOT LIKE 'world' AND sectionId NOT LIKE 'sport'" +
+            "AND sectionId NOT LIKE 'science' AND sectionId NOT LIKE 'environment'")
+    suspend fun deleteAllData()
 }
