@@ -3,7 +3,9 @@ package com.example.myproj.uiHolder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +22,14 @@ import androidx.paging.PagingDataAdapter
 
 
 class RvPagingAdapter(private val context : Context,
-                      private val section: String? = null
+                      private val section: String? = null,
+                      private val color: String,
+                      private val txtSize : String,
 ) : PagingDataAdapter<ApiResult, RvPagingAdapter.ViewHolder>(diffCallback) {
-    inner class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
+            Log.d("RvPagingAdapter", "bind: $color, $txtSize")
             binding.apply {
                 tvTitle.text = item.webTitle
                 tvSection.text = section

@@ -99,15 +99,12 @@ class SettingFragment : Fragment() {
             val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDayOfMonth"
 
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-            val currentDate =
-                simpleDateFormat.parse("$currentYear-${currentMonth + 1}-$currentDayOfMonth")
             val selectTime = simpleDateFormat.parse(selectedDate)
-            val checker = ((currentDate?.time ?: 0) - (selectTime?.time ?: 0)) / (60000)
-            if (checker <= 0) {
+            if (selectedYear > 2022) {
                 Toast.makeText(requireContext(), "Invalid Date Selected", Toast.LENGTH_SHORT).show()
             } else {
                 lifecycle.coroutineScope.launch {
-                    viewModel.saveToDataStoreFromDate(selectedDate)
+                    viewModel.saveToDataStore(fromDate = selectedDate)
                 }
             }
         }, currentYear, currentMonth, currentDayOfMonth).show()
@@ -121,19 +118,19 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btnSmall).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreTextSize("small")
+                viewModel.saveToDataStore(textSize = "small")
             }
             dialog.dismiss()
         }
-        dialog.findViewById<View>(R.id.btnO).setOnClickListener {
+        dialog.findViewById<View>(R.id.btnMedium).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreTextSize("medium")
+                viewModel.saveToDataStore(textSize = "medium")
             }
             dialog.dismiss()
         }
-        dialog.findViewById<View>(R.id.btnR).setOnClickListener {
+        dialog.findViewById<View>(R.id.btnLarge).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreTextSize("large")
+                viewModel.saveToDataStore(textSize = "large")
             }
             dialog.dismiss()
         }
@@ -159,37 +156,37 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btnWhite).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("white")
+                viewModel.saveToDataStore(colorTheme = "white")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnSkyBlue).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("skyBlue")
+                viewModel.saveToDataStore(colorTheme = "skyBlue")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnDarkBlue).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("darkBlue")
+                viewModel.saveToDataStore(colorTheme = "darkBlue")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnViolet).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("violet")
+                viewModel.saveToDataStore(colorTheme = "violet")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnLightGreen).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("lightGreen")
+                viewModel.saveToDataStore(colorTheme = "lightGreen")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnGreen).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreColorTheme("green")
+                viewModel.saveToDataStore(colorTheme = "green")
             }
             dialog.dismiss()
         }
@@ -214,19 +211,19 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btnN).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreOrderBy("newest")
+                viewModel.saveToDataStore(orderBy = "newest")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnO).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreOrderBy("oldest")
+                viewModel.saveToDataStore(orderBy = "oldest")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnR).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreOrderBy("relevance")
+                viewModel.saveToDataStore(orderBy = "relevance")
             }
             dialog.dismiss()
         }
@@ -251,19 +248,19 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btn5).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreNOI("5")
+                viewModel.saveToDataStore(numberOfItem = "5")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btn10).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreNOI("10")
+                viewModel.saveToDataStore(numberOfItem = "10")
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btn15).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStoreNOI("15")
+                viewModel.saveToDataStore(numberOfItem = "15")
             }
             dialog.dismiss()
         }

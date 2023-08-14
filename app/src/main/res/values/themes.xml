@@ -3,18 +3,20 @@
     <style name="Base.Theme.MyProj" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#BDAED8</item>
 
-
+        <!-- Customize your theme here. -->
     </style>
-
     <style name="Theme.MyProj" parent="Base.Theme.MyProj" />
-
     <style name="CustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">9sp</item>
     </style>
-
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
+
+
+
+
+
 
 </resources>

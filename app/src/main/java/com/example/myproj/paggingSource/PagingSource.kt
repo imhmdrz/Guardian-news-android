@@ -22,7 +22,9 @@ import java.io.IOException
 class PagingMediator(
     private val section: String?,
     private val apiService: GuardianApiService,
-    private val db: NewsDataBase
+    private val db: NewsDataBase,
+    private val orderBy : String,
+    private val fromDate : String
 ) : RemoteMediator<Int, ApiResult>() {
     override suspend fun initialize(): InitializeAction = InitializeAction.LAUNCH_INITIAL_REFRESH
     override suspend fun load(
@@ -56,7 +58,7 @@ class PagingMediator(
 
         delay(2000)
         try {
-            val response = apiService.getGuardianData(section, page, state.config.pageSize)
+            val response = apiService.getGuardianData(section, page, state.config.pageSize , orderBy , fromDate)
             val endOfPageReached = response.body()?.response?.results?.isEmpty() == true
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {

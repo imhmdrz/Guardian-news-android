@@ -1,5 +1,6 @@
 package com.example.myproj.uiHolder
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,39 +17,58 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class GuardianViewModel (private val repo: GuardianRepository,
-                         private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    fun guardianDataHome(): Flow<PagingData<ApiResult>> = repo.numberOI
-        .map { repo.getGuardianData(it.toInt()) }
-        .flattenConcat().cachedIn(viewModelScope)
-    fun guardianDataBySectionWorld(): Flow<PagingData<ApiResult>> = repo.numberOI
-        .map { repo.getGuardianDataBySection("world",it.toInt()) }
-        .flattenConcat().cachedIn(viewModelScope)
-    fun guardianDataBySectionScience(): Flow<PagingData<ApiResult>> = repo.numberOI
-        .map { repo.getGuardianDataBySection("science",it.toInt()) }
-        .flattenConcat().cachedIn(viewModelScope)
-    fun guardianDataBySectionSport(): Flow<PagingData<ApiResult>> = repo.numberOI
-        .map { repo.getGuardianDataBySection("sport",it.toInt()) }
-        .flattenConcat().cachedIn(viewModelScope)
-    fun guardianDataBySectionEnvironment(): Flow<PagingData<ApiResult>> = repo.numberOI
-        .map { repo.getGuardianDataBySection("environment",it.toInt()) }
-        .flattenConcat().cachedIn(viewModelScope)
+class GuardianViewModel(
+    private val repo: GuardianRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    val guardianDataHome : Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianData(str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
 
+    val guardianDataBySectionWorld: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("world", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
 
-    fun saveToDataStoreNOI(numberOfItems: String) = viewModelScope.launch{
-        repo.saveToDataStoreNOI(numberOfItems)
-    }
-    fun saveToDataStoreOrderBy(orderBy: String) = viewModelScope.launch{
-        repo.saveToDataStoreOB(orderBy)
-    }
-    fun saveToDataStoreFromDate(fromDate: String) = viewModelScope.launch{
-        repo.saveToDataStoreFD(fromDate)
-    }
-    fun saveToDataStoreColorTheme(colorTheme: String) = viewModelScope.launch{
-        repo.saveToDataStoreCT(colorTheme)
-    }
-    fun saveToDataStoreTextSize(textSize: String) = viewModelScope.launch{
-        repo.saveToDataStoreTS(textSize)
+    val guardianDataBySectionScience: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("science", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+
+    val guardianDataBySectionSport: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("sport", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+
+    val guardianDataBySectionEnvironment: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("environment", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+
+    fun saveToDataStore(
+        numberOfItem: String? = null,
+        orderBy: String? = null,
+        fromDate: String? = null,
+        colorTheme: String? = null,
+        textSize: String? = null
+    ) = viewModelScope.launch {
+        repo.saveToDataStore(numberOfItem, orderBy, fromDate, colorTheme, textSize)
     }
 
     val readFromDataStoreNOI = repo.numberOI.distinctUntilChanged().stateIn(

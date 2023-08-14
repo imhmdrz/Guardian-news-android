@@ -36,8 +36,10 @@ class GuardianRepository(
     private val dataStore: DataStore<Preferences> = context.createDataStore(
         name = "settings"
     )
+
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianData(pageSize : Int): Flow<PagingData<ApiResult>> {
+    fun getGuardianData(pageSize: Int , orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
+        Log.d("GuardianRepository", "getGuardianData: $pageSize $orderBy $fromDate ")
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
@@ -46,7 +48,9 @@ class GuardianRepository(
             remoteMediator = PagingMediator(
                 null,
                 apiService,
-                db
+                db,
+                orderBy,
+                fromDate
             ),
             pagingSourceFactory = {
                 db.newsDao().getAllData()
@@ -55,7 +59,8 @@ class GuardianRepository(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianDataBySection(section: String,pageSize : Int): Flow<PagingData<ApiResult>> {
+    fun getGuardianDataBySection(section: String, pageSize: Int, orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
+        Log.d("GuardianRepository", "getGuardianData: $pageSize $orderBy $fromDate ")
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
@@ -64,7 +69,9 @@ class GuardianRepository(
             remoteMediator = PagingMediator(
                 section,
                 apiService,
-                db
+                db,
+                orderBy,
+                fromDate
             ),
             pagingSourceFactory = {
                 db.newsDao().getData(section)
@@ -73,33 +80,37 @@ class GuardianRepository(
     }
 
 
-    suspend fun saveToDataStoreNOI(numberOfItem: String) {
-        dataStore.edit { settings ->
-            settings[PreferencesKeys.numberOfItem] = numberOfItem
+    suspend fun saveToDataStore(
+        numberOfItem: String? = null,
+        orderBy: String?,
+        fromDate: String?,
+        colorTheme: String?,
+        textSize: String?
+    ) {
+        numberOfItem?.let {
+            dataStore.edit { settings ->
+                settings[PreferencesKeys.numberOfItem] = numberOfItem
+            }
         }
-    }
-
-    suspend fun saveToDataStoreOB(orderBy: String) {
-        dataStore.edit { settings ->
-            settings[PreferencesKeys.orderBy] = orderBy
+        orderBy?.let {
+            dataStore.edit { settings ->
+                settings[PreferencesKeys.orderBy] = orderBy
+            }
         }
-    }
-
-    suspend fun saveToDataStoreFD(fromDate: String) {
-        dataStore.edit { settings ->
-            settings[PreferencesKeys.fromDate] = fromDate
+        fromDate?.let {
+            dataStore.edit { settings ->
+                settings[PreferencesKeys.fromDate] = fromDate
+            }
         }
-    }
-
-    suspend fun saveToDataStoreCT(colorTheme: String) {
-        dataStore.edit { settings ->
-            settings[PreferencesKeys.colorTHeme] = colorTheme
+        colorTheme?.let {
+            dataStore.edit { settings ->
+                settings[PreferencesKeys.colorTHeme] = colorTheme
+            }
         }
-    }
-
-    suspend fun saveToDataStoreTS(textSize: String) {
-        dataStore.edit { settings ->
-            settings[PreferencesKeys.textSize] = textSize
+        textSize?.let {
+            dataStore.edit { settings ->
+                settings[PreferencesKeys.textSize] = textSize
+            }
         }
     }
 

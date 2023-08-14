@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class GuardianFragment() : Fragment() {
@@ -33,7 +34,8 @@ class GuardianFragment() : Fragment() {
                 }
             }
     }
-    private val type: String by lazy { arguments?.getString("type") ?: "Home"}
+
+    private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
     private var _binding: FragmentGuardianBinding? = null
@@ -55,7 +57,19 @@ class GuardianFragment() : Fragment() {
                 owner = this
             )
         ).get(GuardianViewModel::class.java)
-        rvAdapter = RvPagingAdapter(requireContext(), type)
+        var colorTH = "white"
+        var textSize = "medium"
+        lifecycleScope.launch {
+            viewModel.readFromDataStoreColorTheme.map { color ->
+                colorTH = color
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.readFromDataStoreTextSize.map { size ->
+                textSize = size
+            }
+        }
+        rvAdapter = RvPagingAdapter(requireContext(), type, colorTH, textSize)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = rvAdapter.withLoadStateFooter(
@@ -65,31 +79,31 @@ class GuardianFragment() : Fragment() {
         }
         when (type) {
             "Home" -> lifecycleScope.launch {
-                viewModel.guardianDataHome().collect{
+                viewModel.guardianDataHome.collect {
                     uiRender(it)
                 }
             }
 
             "World" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionWorld().collect(){
+                viewModel.guardianDataBySectionWorld.collect() {
                     uiRender(it)
                 }
             }
 
             "Science" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionScience().collect(){
+                viewModel.guardianDataBySectionScience.collect() {
                     uiRender(it)
                 }
             }
 
             "Sport" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionSport().collect(){
+                viewModel.guardianDataBySectionSport.collect() {
                     uiRender(it)
                 }
             }
 
             "Environment" -> lifecycleScope.launch {
-                viewModel.guardianDataBySectionEnvironment().collect(){
+                viewModel.guardianDataBySectionEnvironment.collect() {
                     uiRender(it)
                 }
             }
@@ -112,7 +126,7 @@ class GuardianFragment() : Fragment() {
                 errorState?.let {
                     Toast.makeText(
                         requireContext(),
-                        "\uD83D\uDE28 Wooops ${it.error}",
+                        "\uD83D\uDE28 ${it.error}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
