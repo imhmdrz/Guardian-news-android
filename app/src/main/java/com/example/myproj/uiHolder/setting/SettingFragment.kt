@@ -14,12 +14,11 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.myproj.R
-import com.example.myproj.databinding.FragmentGuardianBinding
+import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentSettingBinding
 import com.example.myproj.uiHolder.GuardianViewModel
 import com.example.myproj.uiHolder.Injection
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -45,6 +44,7 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             this, Injection.provideViewModelFactory(
+                requireContext().dataStore,
                 context = requireContext(),
                 owner = this
             )

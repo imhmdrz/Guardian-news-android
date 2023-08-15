@@ -17,22 +17,33 @@
 package com.example.myproj.uiHolder
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.loadDataFromInternet.RetrofitIns
 import com.example.myproj.repository.GuardianRepository
 import com.example.myproj.roomDataBase.NewsDataBase
+
 object Injection {
 
-    private fun provideGithubRepository(context: Context): GuardianRepository {
+    private fun provideGuardianRepository(
+        dataStore: DataStore<Preferences>,
+        context: Context
+    ): GuardianRepository {
         return GuardianRepository(
+            dataStore,
             apiService = RetrofitIns.getRetrofitInstance().create(GuardianApiService::class.java),
             db = NewsDataBase.getInstance(context),
-            context = context
         )
     }
-    fun provideViewModelFactory(context: Context, owner: SavedStateRegistryOwner): ViewModelProvider.Factory {
-        return GuardianViewModelFactory(owner, provideGithubRepository(context))
+
+    fun provideViewModelFactory(
+        dataStore: DataStore<Preferences>,
+        context: Context,
+        owner: SavedStateRegistryOwner
+    ): ViewModelProvider.Factory {
+        return GuardianViewModelFactory(owner, provideGuardianRepository(dataStore, context))
     }
 }

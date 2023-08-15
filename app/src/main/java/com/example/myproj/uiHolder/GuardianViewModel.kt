@@ -1,6 +1,8 @@
 package com.example.myproj.uiHolder
 
-import android.util.Log
+
+
+
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,17 +12,19 @@ import com.example.myproj.model.ApiResult
 import com.example.myproj.repository.GuardianRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+
+
 class GuardianViewModel(
     private val repo: GuardianRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
     val guardianDataHome : Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->

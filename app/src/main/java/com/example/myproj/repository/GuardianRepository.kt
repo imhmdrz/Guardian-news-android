@@ -3,13 +3,11 @@ package com.example.myproj.repository
 
 import android.content.Context
 import android.util.Log
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
-import androidx.datastore.preferences.createDataStore
-import androidx.datastore.preferences.edit
-import androidx.datastore.preferences.emptyPreferences
-import androidx.datastore.preferences.preferencesKey
-import androidx.lifecycle.asLiveData
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -18,24 +16,17 @@ import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
 import com.example.myproj.paggingSource.PagingMediator
 import com.example.myproj.roomDataBase.NewsDataBase
-import kotlinx.coroutines.delay
+import com.example.myproj.dataStore.PreferencesKeys
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import java.io.IOException
 
 class GuardianRepository(
+    private val dataStore: DataStore<Preferences>,
     private val apiService: GuardianApiService,
-    private val db: NewsDataBase,
-    context: Context
+    private val db: NewsDataBase
 ) {
-    private val dataStore: DataStore<Preferences> = context.createDataStore(
-        name = "settings"
-    )
 
     @OptIn(ExperimentalPagingApi::class)
     fun getGuardianData(pageSize: Int , orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
@@ -153,13 +144,5 @@ class GuardianRepository(
     }.map { preferences ->
         val textSize = preferences[PreferencesKeys.textSize] ?: "medium"
         textSize
-    }
-
-    private object PreferencesKeys {
-        val numberOfItem = preferencesKey<String>("number_of_item")
-        val orderBy = preferencesKey<String>("order_by")
-        val fromDate = preferencesKey<String>("from_date")
-        val colorTHeme = preferencesKey<String>("color_theme")
-        val textSize = preferencesKey<String>("text_size")
     }
 }

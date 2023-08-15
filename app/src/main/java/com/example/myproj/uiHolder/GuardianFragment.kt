@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
@@ -34,7 +35,6 @@ class GuardianFragment() : Fragment() {
                 }
             }
     }
-
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
@@ -53,6 +53,7 @@ class GuardianFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             this, provideViewModelFactory(
+                requireContext().dataStore,
                 context = requireContext(),
                 owner = this
             )
