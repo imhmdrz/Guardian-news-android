@@ -1,25 +1,51 @@
 package com.example.myproj
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.coroutineScope
+import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.ActivityMainBinding
 import com.example.myproj.pageDrawerAdapter.PageAdapter
+import com.example.myproj.uiHolder.Injection
 import com.example.myproj.uiHolder.setting.SettingFragment
+import com.example.myproj.uiHolder.setting.SettingViewModel
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 
-private lateinit var binding: ActivityMainBinding
-private lateinit var toggle: ActionBarDrawerToggle
-private lateinit var drawerLayout : DrawerLayout
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewModel: SettingViewModel
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(
+            this, Injection.provideSettingViewModelFactory(
+                this.dataStore,
+                context = this,
+                owner = this
+            )
+        ).get(SettingViewModel::class.java)
+        lifecycle.coroutineScope.launch {
+            viewModel.readFromDataStoreColorTheme.collect() {
+                Log.d("MainActivity", "onCreate: $it")
+                when (it) {
+                    "white" -> setTheme(R.style.Theme_MyProj)
+                    "skyBlue" -> setTheme(R.style.Theme_MyProjSkyBlue)
+                }
+            }
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.apply {
@@ -39,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         navView(binding.navView)
     }
+
     private fun navView(navView: NavigationView) {
         navView.setNavigationItemSelectedListener {
             it.isChecked = true
@@ -53,12 +80,14 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)){
+        if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         when (item.itemId) {
@@ -66,20 +95,32 @@ class MainActivity : AppCompatActivity() {
                 binding.navView.visibility = View.GONE
                 binding.tabLayout.visibility = View.GONE
                 binding.viewPager.visibility = View.GONE
+                drawerLayout.visibility = View.GONE
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 item.isVisible = false
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.drawerL, SettingFragment())
+                    .replace(R.id.frameL, SettingFragment())
                     .addToBackStack("setting")
                     .commit()
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
         binding.navView.visibility = View.VISIBLE
         binding.tabLayout.visibility = View.VISIBLE
         binding.viewPager.visibility = View.VISIBLE
+        binding.drawerL.visibility = View.VISIBLE
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
+
+    fun hasThemeChanged(): Boolean {
+        return viewModel.hasThemeChanged
+    }
+
+
 }

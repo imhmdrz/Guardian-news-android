@@ -13,18 +13,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import com.example.myproj.MainActivity
 import com.example.myproj.R
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentSettingBinding
 import com.example.myproj.uiHolder.GuardianViewModel
 import com.example.myproj.uiHolder.Injection
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class SettingFragment : Fragment() {
-    private lateinit var viewModel: GuardianViewModel
+    private lateinit var viewModel: SettingViewModel
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -39,16 +43,21 @@ class SettingFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
+    override fun onStart() {
+        super.onStart()
+        if ((activity as MainActivity).hasThemeChanged()) {
+            activity?.recreate()
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
-            this, Injection.provideViewModelFactory(
+            this, Injection.provideSettingViewModelFactory(
                 requireContext().dataStore,
                 context = requireContext(),
                 owner = this
             )
-        ).get(GuardianViewModel::class.java)
+        ).get(SettingViewModel::class.java)
         lifecycle.coroutineScope.launch {
             viewModel.readFromDataStoreNOI.collect() {
                 binding.tvNumber.text = it
@@ -65,8 +74,9 @@ class SettingFragment : Fragment() {
             }
         }
         lifecycle.coroutineScope.launch {
-            viewModel.readFromDataStoreColorTheme.collect() {
-                binding.tvColor.text = it
+            viewModel.readFromDataStoreColorTheme.collect(){
+                binding.tvColor.text=it
+                viewModel.hasThemeChanged = true
             }
         }
         lifecycle.coroutineScope.launch {
@@ -74,6 +84,7 @@ class SettingFragment : Fragment() {
                 binding.tvTextSize.text = it
             }
         }
+
         binding.btnGetNumber.setOnClickListener {
             showDialogForNumberOfItem()
         }

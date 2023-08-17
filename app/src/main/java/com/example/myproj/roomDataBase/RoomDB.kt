@@ -36,7 +36,7 @@ abstract class NewsDataBase:RoomDatabase(){
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                NewsDataBase::class.java, "News19.db"
+                NewsDataBase::class.java, "News20.db"
             )
                 .fallbackToDestructiveMigration()
                 .build()

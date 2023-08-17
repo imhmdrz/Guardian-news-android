@@ -66,6 +66,7 @@
             android:textSize="15sp"
             android:minLines="3"
             android:maxLines="5"
+            android:textColor="@color/black"
             android:text="Puff pastry is a great thing to have to hand for using up all kinds of odds and ends, both savoury and sweet"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"

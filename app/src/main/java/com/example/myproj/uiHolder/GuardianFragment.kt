@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myproj.MainActivity
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
@@ -35,6 +36,14 @@ class GuardianFragment() : Fragment() {
                 }
             }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if ((activity as MainActivity).hasThemeChanged()) {
+            activity?.recreate()
+        }
+    }
+
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
@@ -58,19 +67,7 @@ class GuardianFragment() : Fragment() {
                 owner = this
             )
         ).get(GuardianViewModel::class.java)
-        var colorTH = "white"
-        var textSize = "medium"
-        lifecycleScope.launch {
-            viewModel.readFromDataStoreColorTheme.map { color ->
-                colorTH = color
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.readFromDataStoreTextSize.map { size ->
-                textSize = size
-            }
-        }
-        rvAdapter = RvPagingAdapter(requireContext(), type, colorTH, textSize)
+        rvAdapter = RvPagingAdapter(requireContext(), type)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = rvAdapter.withLoadStateFooter(

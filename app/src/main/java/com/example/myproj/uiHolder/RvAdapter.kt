@@ -22,14 +22,11 @@ import androidx.paging.PagingDataAdapter
 
 
 class RvPagingAdapter(private val context : Context,
-                      private val section: String? = null,
-                      private val color: String,
-                      private val txtSize : String,
+                      private val section: String? = null
 ) : PagingDataAdapter<ApiResult, RvPagingAdapter.ViewHolder>(diffCallback) {
     inner class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
-            Log.d("RvPagingAdapter", "bind: $color, $txtSize")
             binding.apply {
                 tvTitle.text = item.webTitle
                 tvSection.text = section

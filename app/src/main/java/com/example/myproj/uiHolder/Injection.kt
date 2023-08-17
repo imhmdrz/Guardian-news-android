@@ -25,6 +25,7 @@ import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.loadDataFromInternet.RetrofitIns
 import com.example.myproj.repository.GuardianRepository
 import com.example.myproj.roomDataBase.NewsDataBase
+import com.example.myproj.uiHolder.setting.SettingViewModelFactory
 
 object Injection {
 
@@ -45,5 +46,12 @@ object Injection {
         owner: SavedStateRegistryOwner
     ): ViewModelProvider.Factory {
         return GuardianViewModelFactory(owner, provideGuardianRepository(dataStore, context))
+    }
+    fun provideSettingViewModelFactory(
+        dataStore: DataStore<Preferences>,
+        context: Context,
+        owner: SavedStateRegistryOwner
+    ): ViewModelProvider.Factory {
+        return SettingViewModelFactory(owner, provideGuardianRepository(dataStore, context))
     }
 }

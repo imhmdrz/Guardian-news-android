@@ -64,46 +64,4 @@ class GuardianViewModel(
                 }.flattenConcat()
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
-
-    fun saveToDataStore(
-        numberOfItem: String? = null,
-        orderBy: String? = null,
-        fromDate: String? = null,
-        colorTheme: String? = null,
-        textSize: String? = null
-    ) = viewModelScope.launch {
-        repo.saveToDataStore(numberOfItem, orderBy, fromDate, colorTheme, textSize)
-    }
-
-    val readFromDataStoreNOI = repo.numberOI.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = "10"
-    )
-
-    val readFromDataStoreOrderBy = repo.orderB.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = "newest"
-    )
-
-    val readFromDataStoreFromDate = repo.fromD.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = "2021-01-01"
-    )
-
-    val readFromDataStoreColorTheme = repo.colorT.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = "white"
-    )
-
-    val readFromDataStoreTextSize = repo.textS.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = "medium"
-    )
-
-
 }
