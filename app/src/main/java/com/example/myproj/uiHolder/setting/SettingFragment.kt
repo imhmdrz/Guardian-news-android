@@ -19,6 +19,7 @@ import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentSettingBinding
 import com.example.myproj.uiHolder.GuardianViewModel
 import com.example.myproj.uiHolder.Injection
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -42,12 +43,6 @@ class SettingFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    override fun onStart() {
-        super.onStart()
-        if ((activity as MainActivity).hasThemeChanged()) {
-            activity?.recreate()
-        }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,7 +71,6 @@ class SettingFragment : Fragment() {
         lifecycle.coroutineScope.launch {
             viewModel.readFromDataStoreColorTheme.collect(){
                 binding.tvColor.text=it
-                viewModel.hasThemeChanged = true
             }
         }
         lifecycle.coroutineScope.launch {
@@ -168,14 +162,22 @@ class SettingFragment : Fragment() {
         dialog.findViewById<View>(R.id.btnWhite).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "white")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnSkyBlue).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "skyBlue")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnDarkBlue).setOnClickListener {
             lifecycle.coroutineScope.launch {

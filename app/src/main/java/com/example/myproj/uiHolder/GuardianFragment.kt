@@ -37,13 +37,6 @@ class GuardianFragment() : Fragment() {
             }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if ((activity as MainActivity).hasThemeChanged()) {
-            activity?.recreate()
-        }
-    }
-
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel

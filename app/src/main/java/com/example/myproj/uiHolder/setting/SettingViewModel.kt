@@ -22,7 +22,6 @@ class SettingViewModel(
     ) = viewModelScope.launch {
         repo.saveToDataStore(numberOfItem, orderBy, fromDate, colorTheme, textSize)
     }
-    var hasThemeChanged: Boolean = false
     val readFromDataStoreNOI = repo.numberOI.distinctUntilChanged().shareIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
