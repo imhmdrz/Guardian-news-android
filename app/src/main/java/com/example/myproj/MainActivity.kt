@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.ActivityMainBinding
 import com.example.myproj.pageDrawerAdapter.PageAdapter
@@ -19,7 +20,9 @@ import com.example.myproj.uiHolder.setting.SettingViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
 
@@ -30,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportFragmentManager.popBackStack()
         viewModel = ViewModelProvider(
             this, Injection.provideSettingViewModelFactory(
                 this.dataStore,
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 owner = this
             )
         ).get(SettingViewModel::class.java)
-        lifecycle.coroutineScope.launch {
+        lifecycleScope.launch {
             viewModel.readFromDataStoreColorTheme.collect() {
                 Log.d("MainActivity", "onCreate: $it")
                 when (it) {
@@ -51,26 +53,36 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.apply {
-            viewPager.adapter = PageAdapter(supportFragmentManager)
-            tabLayout.setupWithViewPager(binding.viewPager, true)
-            viewPager.offscreenPageLimit = 5
-        }
-        drawerLayout = binding.drawerL
-        toggle = ActionBarDrawerToggle(
-            this@MainActivity,
-            drawerLayout,
-            R.string.open,
-            R.string.close
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        navView(binding.navView)
-    }
+        supportFragmentManager.popBackStack()
+        runBlocking {
+            launch {
+                if (viewModel.firstTimeOpenApp) {
+                    delay(1000)
+                    recreate()
+                    viewModel.firstTimeOpenApp = false
+                }
+                binding = ActivityMainBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+                binding.apply {
+                    viewPager.adapter = PageAdapter(supportFragmentManager)
+                    tabLayout.setupWithViewPager(binding.viewPager, true)
+                    viewPager.offscreenPageLimit = 5
+                }
+                drawerLayout = binding.drawerL
+                toggle = ActionBarDrawerToggle(
+                    this@MainActivity,
+                    drawerLayout,
+                    R.string.open,
+                    R.string.close
+                )
+                drawerLayout.addDrawerListener(toggle)
+                toggle.syncState()
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                navView(binding.navView)
 
+            }
+        }
+    }
     private fun navView(navView: NavigationView) {
         navView.setNavigationItemSelectedListener {
             it.isChecked = true
@@ -121,7 +133,6 @@ class MainActivity : AppCompatActivity() {
         binding.drawerL.visibility = View.VISIBLE
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
-
 
 
 }

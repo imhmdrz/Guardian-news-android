@@ -165,7 +165,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }
@@ -175,7 +175,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }
@@ -185,7 +185,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }
@@ -195,7 +195,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }
@@ -205,7 +205,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }
@@ -215,7 +215,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(2000)
+                delay(1000)
                 activity?.recreate()
             }
         }

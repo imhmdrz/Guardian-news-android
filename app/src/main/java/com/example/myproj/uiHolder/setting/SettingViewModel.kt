@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 class SettingViewModel(
     private val repo: GuardianRepository
 ) : ViewModel() {
+    var firstTimeOpenApp = true
     fun saveToDataStore(
         numberOfItem: String? = null,
         orderBy: String? = null,
@@ -42,8 +43,7 @@ class SettingViewModel(
 
     val readFromDataStoreColorTheme = repo.colorT.distinctUntilChanged().shareIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
+        started = SharingStarted.WhileSubscribed()
     )
 
     val readFromDataStoreTextSize = repo.textS.distinctUntilChanged().shareIn(
