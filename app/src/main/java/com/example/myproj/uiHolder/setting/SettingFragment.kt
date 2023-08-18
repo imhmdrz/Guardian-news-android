@@ -182,26 +182,42 @@ class SettingFragment : Fragment() {
         dialog.findViewById<View>(R.id.btnDarkBlue).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "darkBlue")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnViolet).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "violet")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnLightGreen).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "lightGreen")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnGreen).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(colorTheme = "green")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(2000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.apply {
             show()

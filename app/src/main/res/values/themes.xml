@@ -28,6 +28,65 @@
         <item name="android:textColor">@color/skyBlue</item>
     </style>
 
+    <style name="Base.Theme.MyProjDarkBlue" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/darkBlue</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/darkBlue</item>
+        <item name="android:statusBarColor">@color/darkBlue</item>
+        <item name="android:textViewStyle">@style/textViewDarkBlue</item>
+    </style>
+    <style name="Theme.MyProjDarkBlue" parent="Base.Theme.MyProjDarkBlue" />
+    <style name="textViewDarkBlue" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/darkBlue</item>
+    </style>
+
+    <style name="Base.Theme.MyProjViolet" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/violet</item>
+        <item name="android:statusBarColor">@color/violet</item>
+        <item name="android:textViewStyle">@style/textViewViolet</item>
+    </style>
+    <style name="Theme.MyProjViolet" parent="Base.Theme.MyProjViolet" />
+    <style name="textViewViolet" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/violet</item>
+    </style>
+
+    <style name="Base.Theme.MyProjLightGreen" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/lightGreen</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/lightGreen</item>
+        <item name="android:statusBarColor">@color/lightGreen</item>
+        <item name="android:textViewStyle">@style/textViewLightGreen</item>
+    </style>
+    <style name="Theme.MyProjLightGreen" parent="Base.Theme.MyProjLightGreen" />
+    <style name="textViewLightGreen" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/lightGreen</item>
+    </style>
+
+    <style name="Base.Theme.MyProjGreen" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/green</item>
+        <item name="android:statusBarColor">@color/green</item>
+        <item name="android:textViewStyle">@style/textViewGreen</item>
+    </style>
+    <style name="Theme.MyProjGreen" parent="Base.Theme.MyProjGreen" />
+    <style name="textViewGreen" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+
+
+
 
     <style name="CustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">9sp</item>

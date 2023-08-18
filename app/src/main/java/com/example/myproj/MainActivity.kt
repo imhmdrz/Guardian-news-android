@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
                 when (it) {
                     "white" -> setTheme(R.style.Theme_MyProj)
                     "skyBlue" -> setTheme(R.style.Theme_MyProjSkyBlue)
+                    "darkBlue" -> setTheme(R.style.Theme_MyProjDarkBlue)
+                    "violet" -> setTheme(R.style.Theme_MyProjViolet)
+                    "lightGreen" -> setTheme(R.style.Theme_MyProjLightGreen)
+                    "green" -> setTheme(R.style.Theme_MyProjGreen)
                 }
             }
         }
