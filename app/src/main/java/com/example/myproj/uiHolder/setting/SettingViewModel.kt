@@ -14,6 +14,7 @@ class SettingViewModel(
     private val repo: GuardianRepository
 ) : ViewModel() {
     var firstTimeOpenApp = true
+    var textSize = "Small"
     fun saveToDataStore(
         numberOfItem: String? = null,
         orderBy: String? = null,

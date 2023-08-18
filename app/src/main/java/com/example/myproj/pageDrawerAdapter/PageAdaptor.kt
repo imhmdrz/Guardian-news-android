@@ -6,18 +6,18 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.myproj.uiHolder.GuardianFragment
 import com.example.myproj.uiHolder.setting.SettingFragment
 
-class PageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PageAdapter(fm: FragmentManager, val textSize:String) : FragmentPagerAdapter(fm) {
     override fun getCount(): Int {
         return 5
     }
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> GuardianFragment.newInstance("Home")
-            1 -> GuardianFragment.newInstance("World")
-            2 -> GuardianFragment.newInstance("Science")
-            3 -> GuardianFragment.newInstance("Sport")
-            else -> GuardianFragment.newInstance("Environment")
+            0 -> GuardianFragment.newInstance("Home",textSize)
+            1 -> GuardianFragment.newInstance("World",textSize)
+            2 -> GuardianFragment.newInstance("Science",textSize)
+            3 -> GuardianFragment.newInstance("Sport",textSize)
+            else -> GuardianFragment.newInstance("Environment",textSize)
         }
     }
     override fun getPageTitle(position: Int): CharSequence? {

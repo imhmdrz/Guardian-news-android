@@ -123,21 +123,33 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btnSmall).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "small")
+                viewModel.saveToDataStore(textSize = "Small")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(1000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnMedium).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "medium")
+                viewModel.saveToDataStore(textSize = "Medium")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(1000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnLarge).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "large")
+                viewModel.saveToDataStore(textSize = "Large")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(1000)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.apply {
             show()

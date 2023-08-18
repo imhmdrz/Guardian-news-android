@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
+    private var pageAdapter: PageAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
@@ -53,6 +54,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            viewModel.readFromDataStoreTextSize.collect {
+                viewModel.textSize = it
+            }
+        }
         supportFragmentManager.popBackStack()
         runBlocking {
             launch {
@@ -60,26 +66,28 @@ class MainActivity : AppCompatActivity() {
                     delay(1000)
                     recreate()
                     viewModel.firstTimeOpenApp = false
+                }else{
+                    binding = ActivityMainBinding.inflate(layoutInflater)
+                    setContentView(binding.root)
+                    binding.apply {
+                        pageAdapter = PageAdapter(supportFragmentManager, viewModel.textSize)
+                        viewPager.adapter = pageAdapter
+                        Log.d("MainActivity", "onCreateaaaaaa: ${viewModel.textSize}")
+                        tabLayout.setupWithViewPager(binding.viewPager, true)
+                        viewPager.offscreenPageLimit = 5
+                    }
+                    drawerLayout = binding.drawerL
+                    toggle = ActionBarDrawerToggle(
+                        this@MainActivity,
+                        drawerLayout,
+                        R.string.open,
+                        R.string.close
+                    )
+                    drawerLayout.addDrawerListener(toggle)
+                    toggle.syncState()
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    navView(binding.navView)
                 }
-                binding = ActivityMainBinding.inflate(layoutInflater)
-                setContentView(binding.root)
-                binding.apply {
-                    viewPager.adapter = PageAdapter(supportFragmentManager)
-                    tabLayout.setupWithViewPager(binding.viewPager, true)
-                    viewPager.offscreenPageLimit = 5
-                }
-                drawerLayout = binding.drawerL
-                toggle = ActionBarDrawerToggle(
-                    this@MainActivity,
-                    drawerLayout,
-                    R.string.open,
-                    R.string.close
-                )
-                drawerLayout.addDrawerListener(toggle)
-                toggle.syncState()
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                navView(binding.navView)
-
             }
         }
     }

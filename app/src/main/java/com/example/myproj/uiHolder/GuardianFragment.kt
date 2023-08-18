@@ -29,15 +29,18 @@ import kotlinx.coroutines.launch
 
 class GuardianFragment() : Fragment() {
     companion object {
-        fun newInstance(type: String?) = GuardianFragment()
+        fun newInstance(type: String?,textSize:String) = GuardianFragment()
             .apply {
+                Log.d("GuardianFragment", "newInstance: $textSize")
                 arguments = Bundle().apply {
                     putString("type", type)
+                    putString("textSize",textSize)
                 }
             }
     }
 
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
+    private val textSize :String by lazy { arguments?.getString("textSize")?: "Small" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
     private var _binding: FragmentGuardianBinding? = null
@@ -60,7 +63,7 @@ class GuardianFragment() : Fragment() {
                 owner = this
             )
         ).get(GuardianViewModel::class.java)
-        rvAdapter = RvPagingAdapter(requireContext(), type)
+        rvAdapter = RvPagingAdapter(requireContext(), type , textSize)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = rvAdapter.withLoadStateFooter(
