@@ -14,7 +14,6 @@ class SettingViewModel(
     private val repo: GuardianRepository
 ) : ViewModel() {
     var firstTimeOpenApp = true
-    var textSize = "Small"
     fun saveToDataStore(
         numberOfItem: String? = null,
         orderBy: String? = null,
@@ -47,9 +46,5 @@ class SettingViewModel(
         started = SharingStarted.WhileSubscribed()
     )
 
-    val readFromDataStoreTextSize = repo.textS.distinctUntilChanged().shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    val readFromDataStoreTextSize = repo.textS.distinctUntilChanged()
 }

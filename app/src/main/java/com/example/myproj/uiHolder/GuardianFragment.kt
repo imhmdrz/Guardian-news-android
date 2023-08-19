@@ -29,18 +29,15 @@ import kotlinx.coroutines.launch
 
 class GuardianFragment() : Fragment() {
     companion object {
-        fun newInstance(type: String?,textSize:String) = GuardianFragment()
+        fun newInstance(type: String?) = GuardianFragment()
             .apply {
-                Log.d("GuardianFragment", "newInstance: $textSize")
                 arguments = Bundle().apply {
                     putString("type", type)
-                    putString("textSize",textSize)
                 }
             }
     }
 
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
-    private val textSize :String by lazy { arguments?.getString("textSize")?: "Small" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
     private var _binding: FragmentGuardianBinding? = null
@@ -63,7 +60,7 @@ class GuardianFragment() : Fragment() {
                 owner = this
             )
         ).get(GuardianViewModel::class.java)
-        rvAdapter = RvPagingAdapter(requireContext(), type , textSize)
+        rvAdapter = RvPagingAdapter(requireContext(), type)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = rvAdapter.withLoadStateFooter(
@@ -114,16 +111,6 @@ class GuardianFragment() : Fragment() {
                 binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
                 binding.recyclerView.isVisible = loadState.refresh !is LoadState.Loading
                 binding.tvError.isVisible = loadState.refresh is LoadState.Error
-                val errorState = loadState.refresh as? LoadState.Error
-                    ?: loadState.source.append as? LoadState.Error
-                    ?: loadState.source.prepend as? LoadState.Error
-                errorState?.let {
-                    Toast.makeText(
-                        requireContext(),
-                        "\uD83D\uDE28 ${it.error}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             }
         }
     }

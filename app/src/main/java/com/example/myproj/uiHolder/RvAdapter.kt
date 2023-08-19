@@ -22,18 +22,12 @@ import androidx.paging.PagingDataAdapter
 
 
 class RvPagingAdapter(private val context : Context,
-                      private val section: String? = null,
-                        private val textSize : String = "Medium",
+                      private val section: String? = null
 ) : PagingDataAdapter<ApiResult, RvPagingAdapter.ViewHolder>(diffCallback) {
     inner class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
             binding.apply {
-                when(textSize){
-                    "Small" -> tvTitle.textSize = 18F
-                    "Medium" -> tvTitle.textSize = 22F
-                    "Large" -> tvTitle.textSize = 26F
-                }
                 tvTitle.text = item.webTitle
                 tvSection.text = section
                 tvText.text = item.fields.trailText.replace("<.*?>".toRegex(), "")

@@ -49,8 +49,7 @@ class SettingFragment : Fragment() {
         viewModel = ViewModelProvider(
             this, Injection.provideSettingViewModelFactory(
                 requireContext().dataStore,
-                context = requireContext(),
-                owner = this
+                context = requireContext()
             )
         ).get(SettingViewModel::class.java)
         lifecycle.coroutineScope.launch {
@@ -127,7 +126,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(1000)
+                delay(500)
                 activity?.recreate()
             }
         }
@@ -137,7 +136,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(1000)
+                delay(500)
                 activity?.recreate()
             }
         }
@@ -147,7 +146,7 @@ class SettingFragment : Fragment() {
                 dialog.dismiss()
                 binding.setting.visibility = View.GONE
                 binding.progressBarColor.visibility = View.VISIBLE
-                delay(1000)
+                delay(500)
                 activity?.recreate()
             }
         }
