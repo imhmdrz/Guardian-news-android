@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialogsh">
+    android:background="@drawable/dialogsh"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -15,11 +15,11 @@
             android:id="@+id/createText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:text="COLOR THEME:"
-            android:padding="8dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="5dp"
+            android:padding="8dp"
+            android:text="COLOR THEME:"
+            android:textAlignment="viewStart"
             android:textSize="25dp" />
 
     </LinearLayout>
@@ -27,79 +27,91 @@
 
     <LinearLayout
         android:id="@+id/layoutVideo"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:padding="10dp">
-
 
 
         <Button
             android:id="@+id/btnWhite"
-            android:background="@drawable/shape_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
             android:text="White"
-            android:textSize="16sp"
-            android:layout_margin="10dp"/>
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/btnSkyBlue"
-            android:background="@drawable/shape_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
             android:text="SkyBlue"
-            android:textSize="16sp"
 
-            android:layout_margin="10dp"/>
-        <Button
-            android:id="@+id/btnDarkBlue"
-            android:background="@drawable/shape_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DarkBlue"
-            android:textSize="16sp"
-
-            android:layout_margin="10dp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/layoutVideo2"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp">
-
 
 
         <Button
             android:id="@+id/btnViolet"
-            android:background="@drawable/shape_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
             android:text="Violet"
-            android:textSize="16sp"
-            android:layout_margin="10dp"/>
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/btnLightGreen"
-            android:background="@drawable/shape_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
             android:text="LightGreen"
-            android:textSize="16sp"
+            android:textSize="16sp" />
 
-            android:layout_margin="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutVideo3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+
+        <Button
+            android:id="@+id/btnDarkBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
+            android:text="DarkBlue"
+
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/btnGreen"
-            android:background="@drawable/shape_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn"
             android:text="Green"
-            android:textSize="16sp"
 
-            android:layout_margin="10dp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 

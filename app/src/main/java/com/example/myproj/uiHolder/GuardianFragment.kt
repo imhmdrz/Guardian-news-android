@@ -54,10 +54,10 @@ class GuardianFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
-            this, provideViewModelFactory(
+            requireActivity(), provideViewModelFactory(
                 requireContext().dataStore,
                 context = requireContext(),
-                owner = this
+                owner = requireActivity()
             )
         ).get(GuardianViewModel::class.java)
         rvAdapter = RvPagingAdapter(requireContext(), type)

@@ -28,6 +28,7 @@ class RvPagingAdapter(private val context : Context,
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
             binding.apply {
+
                 tvTitle.text = item.webTitle
                 tvSection.text = section
                 tvText.text = item.fields.trailText.replace("<.*?>".toRegex(), "")
