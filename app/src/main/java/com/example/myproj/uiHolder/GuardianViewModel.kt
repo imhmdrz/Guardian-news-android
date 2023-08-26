@@ -10,6 +10,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.myproj.model.ApiResult
 import com.example.myproj.repository.GuardianRepository
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 
 
 
+@OptIn(FlowPreview::class)
 class GuardianViewModel(
     private val repo: GuardianRepository,
     private val savedStateHandle: SavedStateHandle

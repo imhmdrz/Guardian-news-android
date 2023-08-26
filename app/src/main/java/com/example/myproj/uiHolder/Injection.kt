@@ -49,9 +49,8 @@ object Injection {
     }
     fun provideSettingViewModelFactory(
         dataStore: DataStore<Preferences>,
-        context: Context,
-        owner: SavedStateRegistryOwner
+        context: Context
     ): ViewModelProvider.Factory {
-        return SettingViewModelFactory(owner, provideGuardianRepository(dataStore, context))
+        return SettingViewModelFactory(provideGuardianRepository(dataStore, context))
     }
 }

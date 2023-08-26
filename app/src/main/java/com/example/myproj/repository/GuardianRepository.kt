@@ -142,7 +142,7 @@ class GuardianRepository(
             emit(emptyPreferences())
         }
     }.map { preferences ->
-        val textSize = preferences[PreferencesKeys.textSize] ?: "medium"
+        val textSize = preferences[PreferencesKeys.textSize] ?: "Small"
         textSize
     }
 }

@@ -46,9 +46,5 @@ class SettingViewModel(
         started = SharingStarted.WhileSubscribed()
     )
 
-    val readFromDataStoreTextSize = repo.textS.distinctUntilChanged().shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    val readFromDataStoreTextSize = repo.textS.distinctUntilChanged()
 }

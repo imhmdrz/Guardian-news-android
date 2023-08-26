@@ -1,5 +1,7 @@
 package com.example.myproj
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -7,10 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
+import com.example.myproj.dataStore.PreferencesKeys
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.ActivityMainBinding
 import com.example.myproj.pageDrawerAdapter.PageAdapter
@@ -21,8 +25,14 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.IOException
 import kotlin.concurrent.thread
 
 
@@ -31,13 +41,39 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
+    private var pageAdapter: PageAdapter? = null
+
+    override fun attachBaseContext(newBase: Context?) {
+        val config = changeFontScale(newBase!!)
+        super.attachBaseContext(config)
+    }
+
+    private fun changeFontScale(context: Context): Context {
+        val configuration = context.resources.configuration
+        configuration.fontScale = changeFont(context)
+        Log.d("MainActivity", "changeFontScale: ${configuration.fontScale}")
+        return context.createConfigurationContext(configuration)
+    }
+
+    private fun changeFont(context: Context) = runBlocking {
+        val str = Injection.provideSettingViewModelFactory(
+            context.dataStore,
+            context = context
+        ).create(SettingViewModel::class.java).readFromDataStoreTextSize.first()
+        when (str) {
+            "Small" -> 0.8f
+            "Medium" -> 1.0f
+            "Large" -> 1.2f
+            else -> 1.0f
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this, Injection.provideSettingViewModelFactory(
                 this.dataStore,
-                context = this,
-                owner = this
+                context = this
             )
         ).get(SettingViewModel::class.java)
         lifecycleScope.launch {
@@ -64,7 +100,8 @@ class MainActivity : AppCompatActivity() {
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
                 binding.apply {
-                    viewPager.adapter = PageAdapter(supportFragmentManager)
+                    pageAdapter = PageAdapter(supportFragmentManager)
+                    viewPager.adapter = pageAdapter
                     tabLayout.setupWithViewPager(binding.viewPager, true)
                     viewPager.offscreenPageLimit = 5
                 }
@@ -79,10 +116,10 @@ class MainActivity : AppCompatActivity() {
                 toggle.syncState()
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
                 navView(binding.navView)
-
             }
         }
     }
+
     private fun navView(navView: NavigationView) {
         navView.setNavigationItemSelectedListener {
             it.isChecked = true

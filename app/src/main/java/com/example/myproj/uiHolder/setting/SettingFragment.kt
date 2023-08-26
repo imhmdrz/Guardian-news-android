@@ -47,10 +47,9 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
-            this, Injection.provideSettingViewModelFactory(
+            requireActivity(), Injection.provideSettingViewModelFactory(
                 requireContext().dataStore,
-                context = requireContext(),
-                owner = this
+                context = requireContext()
             )
         ).get(SettingViewModel::class.java)
         lifecycle.coroutineScope.launch {
@@ -123,21 +122,33 @@ class SettingFragment : Fragment() {
         }
         dialog.findViewById<View>(R.id.btnSmall).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "small")
+                viewModel.saveToDataStore(textSize = "Small")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(500)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnMedium).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "medium")
+                viewModel.saveToDataStore(textSize = "Medium")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(500)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnLarge).setOnClickListener {
             lifecycle.coroutineScope.launch {
-                viewModel.saveToDataStore(textSize = "large")
+                viewModel.saveToDataStore(textSize = "Large")
+                dialog.dismiss()
+                binding.setting.visibility = View.GONE
+                binding.progressBarColor.visibility = View.VISIBLE
+                delay(500)
+                activity?.recreate()
             }
-            dialog.dismiss()
         }
         dialog.apply {
             show()

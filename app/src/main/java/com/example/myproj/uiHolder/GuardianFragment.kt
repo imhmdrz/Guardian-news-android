@@ -54,10 +54,10 @@ class GuardianFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
-            this, provideViewModelFactory(
+            requireActivity(), provideViewModelFactory(
                 requireContext().dataStore,
                 context = requireContext(),
-                owner = this
+                owner = requireActivity()
             )
         ).get(GuardianViewModel::class.java)
         rvAdapter = RvPagingAdapter(requireContext(), type)
@@ -111,16 +111,6 @@ class GuardianFragment() : Fragment() {
                 binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
                 binding.recyclerView.isVisible = loadState.refresh !is LoadState.Loading
                 binding.tvError.isVisible = loadState.refresh is LoadState.Error
-                val errorState = loadState.refresh as? LoadState.Error
-                    ?: loadState.source.append as? LoadState.Error
-                    ?: loadState.source.prepend as? LoadState.Error
-                errorState?.let {
-                    Toast.makeText(
-                        requireContext(),
-                        "\uD83D\uDE28 ${it.error}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             }
         }
     }
