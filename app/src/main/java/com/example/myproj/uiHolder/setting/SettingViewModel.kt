@@ -41,10 +41,7 @@ class SettingViewModel(
         replay = 1
     )
 
-    val readFromDataStoreColorTheme = repo.colorT.distinctUntilChanged().shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed()
-    )
+    val readFromDataStoreColorTheme = repo.colorT.distinctUntilChanged()
 
     val readFromDataStoreTextSize = repo.textS.distinctUntilChanged()
 }
