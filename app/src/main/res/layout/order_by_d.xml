@@ -15,6 +15,7 @@
             android:id="@+id/createText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TextAppearance.Material3.BodyLarge"
             android:textAlignment="viewStart"
             android:text="Order By :"
             android:padding="8dp"
@@ -37,7 +38,7 @@
 
         <Button
             android:id="@+id/btnN"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="newest"
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="oldest"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_marginStart="30dp"
             android:textSize="16sp"/>
 
@@ -80,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="relevance"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
 

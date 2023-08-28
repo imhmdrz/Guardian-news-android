@@ -27,7 +27,7 @@ class GuardianViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val guardianDataHome : Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+    var guardianDataHome : Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->
                     repo.getGuardianData(str.toInt(),order,from)
@@ -35,7 +35,7 @@ class GuardianViewModel(
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
 
-    val guardianDataBySectionWorld: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+    var guardianDataBySectionWorld: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->
                     repo.getGuardianDataBySection("world", str.toInt(),order,from)
@@ -43,7 +43,7 @@ class GuardianViewModel(
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
 
-    val guardianDataBySectionScience: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+    var guardianDataBySectionScience: Flow<PagingData<ApiResult>> = repo.numberOI.map { str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->
                     repo.getGuardianDataBySection("science", str.toInt(),order,from)
@@ -51,7 +51,7 @@ class GuardianViewModel(
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
 
-    val guardianDataBySectionSport: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+    var guardianDataBySectionSport: Flow<PagingData<ApiResult>> = repo.numberOI.map { str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->
                     repo.getGuardianDataBySection("sport", str.toInt(),order,from)
@@ -59,11 +59,49 @@ class GuardianViewModel(
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
 
-    val guardianDataBySectionEnvironment: Flow<PagingData<ApiResult>> = repo.numberOI.map {str ->
+    var guardianDataBySectionEnvironment: Flow<PagingData<ApiResult>> = repo.numberOI.map { str ->
             repo.orderB.map {order->
                 repo.fromD.map {from->
                     repo.getGuardianDataBySection("environment", str.toInt(),order,from)
                 }.flattenConcat()
             }.flattenConcat()
         }.flattenConcat().cachedIn(viewModelScope)
+
+    fun reCreateDataStore() = viewModelScope.launch {
+        guardianDataHome = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianData(str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+        guardianDataBySectionWorld = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("world", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+        guardianDataBySectionScience = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("science", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+        guardianDataBySectionSport = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("sport", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+        guardianDataBySectionEnvironment = repo.numberOI.map {str ->
+            repo.orderB.map {order->
+                repo.fromD.map {from->
+                    repo.getGuardianDataBySection("environment", str.toInt(),order,from)
+                }.flattenConcat()
+            }.flattenConcat()
+        }.flattenConcat().cachedIn(viewModelScope)
+    }
 }

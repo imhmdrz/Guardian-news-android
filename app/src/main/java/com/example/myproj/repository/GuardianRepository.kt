@@ -19,6 +19,7 @@ import com.example.myproj.roomDataBase.NewsDataBase
 import com.example.myproj.dataStore.PreferencesKeys
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -145,4 +146,9 @@ class GuardianRepository(
         val textSize = preferences[PreferencesKeys.textSize] ?: "Small"
         textSize
     }
+
+    val isWantReCreate : Flow<Boolean> = flow {
+        emit(false)
+    }
+
 }

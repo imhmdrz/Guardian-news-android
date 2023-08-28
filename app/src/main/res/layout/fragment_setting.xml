@@ -15,31 +15,41 @@
         android:layout_height="match_parent"
         android:id="@+id/setting">
 
-        <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <androidx.appcompat.widget.LinearLayoutCompat xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="40dp"
+            android:padding="20dp"
             tools:context=".uiHolder.setting.SettingFragment">
 
-            <Button
+            <TextView
+                style="@style/TextAppearance.Material3.BodyLarge"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/shape_btn"
                 android:gravity="center"
-                android:text="SETTING"
-                android:textSize="50dp" />
+                android:text="@string/setting"
+                android:textSize="50sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/colorPrimary" />
             <TextView
+                style="@style/TextAppearance.Material3.BodyLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="--API"
+                android:layout_gravity="center"
+                android:text="@string/api"
                 android:textSize="30sp" />
-
+            <View
+                android:layout_marginBottom="10dp"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:background="?attr/colorPrimary" />
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/shape_btn"
+                    style="@style/ThemeOverlay.Material3.Button.TonalButton"
                     android:text="Number of Items" />
 
                 <TextView
@@ -60,7 +70,6 @@
                     android:layout_margin="5dp"
                     android:text="Number of Items" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/shape_btn"
+                    style="@style/ThemeOverlay.Material3.Button.TonalButton"
                     android:text="orderBy" />
 
                 <TextView
@@ -92,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/shape_btn"
+                    style="@style/ThemeOverlay.Material3.Button.TonalButton"
                     android:text="from Date" />
 
                 <TextView
@@ -102,15 +111,26 @@
                     android:layout_margin="5dp"
                     android:text="Number of Items" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/colorPrimary" />
             <TextView
+                style="@style/TextAppearance.Material3.BodyLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="--STYLE"
+                android:text="@string/style"
                 android:textSize="30sp" />
-
+            <View
+                android:layout_marginBottom="10dp"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:background="?attr/colorPrimary" />
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/shape_btn"
+                    style="@style/ThemeOverlay.Material3.Button.TonalButton"
                     android:text="Color" />
 
                 <TextView
@@ -139,10 +159,10 @@
 
                 <Button
                     android:id="@+id/btnTextSize"
+                    style="@style/ThemeOverlay.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/shape_btn"
                     android:text="textSize" />
 
                 <TextView
