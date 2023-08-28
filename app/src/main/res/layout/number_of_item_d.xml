@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/TextAppearance.Material3.BodyLarge"
             android:id="@+id/createText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +38,7 @@
 
         <Button
             android:id="@+id/btn5"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_marginStart="30dp"
             android:textSize="16sp"/>
 
@@ -80,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="15"
-            android:background="@drawable/shape_btn"
+            style="@style/ThemeOverlay.Material3.Button.TonalButton"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
 

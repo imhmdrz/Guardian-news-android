@@ -17,8 +17,8 @@
         tools:itemCount="10" />
 
     <ProgressBar
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/progressBar"
         android:layout_gravity="center"
         android:visibility="visible"/>

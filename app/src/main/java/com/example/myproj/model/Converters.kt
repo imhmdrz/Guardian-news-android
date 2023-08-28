@@ -1,7 +1,6 @@
 package com.example.myproj.model
 
 import androidx.room.TypeConverter
-import com.example.myproj.model.ThumbnailFields
 import com.google.gson.Gson
 
 class Converters {

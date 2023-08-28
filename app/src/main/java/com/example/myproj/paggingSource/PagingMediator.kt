@@ -9,13 +9,11 @@ import androidx.room.withTransaction
 import com.example.android.codelabs.paging.db.RemoteKeys
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
-import com.example.myproj.model.GuardianApiResponse
 import com.example.myproj.roomDataBase.NewsDataBase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)

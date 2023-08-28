@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myproj.repository.GuardianRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -23,6 +25,7 @@ class SettingViewModel(
     ) = viewModelScope.launch {
         repo.saveToDataStore(numberOfItem, orderBy, fromDate, colorTheme, textSize)
     }
+
     val readFromDataStoreNOI = repo.numberOI.distinctUntilChanged().shareIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -44,4 +47,7 @@ class SettingViewModel(
     val readFromDataStoreColorTheme = repo.colorT.distinctUntilChanged()
 
     val readFromDataStoreTextSize = repo.textS.distinctUntilChanged()
+
+    val isWantReCreate: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
 }

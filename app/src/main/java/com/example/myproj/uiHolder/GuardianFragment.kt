@@ -24,6 +24,8 @@ import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
+import com.example.myproj.uiHolder.setting.SettingViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -40,6 +42,7 @@ class GuardianFragment() : Fragment() {
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
+    private lateinit var settingViewModel: SettingViewModel
     private var _binding: FragmentGuardianBinding? = null
     private val binding get() = _binding!!
 
@@ -51,15 +54,22 @@ class GuardianFragment() : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             requireActivity(), provideViewModelFactory(
-                requireContext().dataStore,
-                context = requireContext(),
+                requireActivity().dataStore,
+                context = requireActivity(),
                 owner = requireActivity()
             )
         ).get(GuardianViewModel::class.java)
+        settingViewModel = ViewModelProvider(
+            requireActivity(), Injection.provideSettingViewModelFactory(
+                requireActivity().dataStore,
+                context = requireActivity()
+            )
+        ).get(SettingViewModel::class.java)
         rvAdapter = RvPagingAdapter(requireContext(), type)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -67,6 +77,16 @@ class GuardianFragment() : Fragment() {
                 footer = LoadStateAdapter { rvAdapter.retry() }
             )
             visibility = View.VISIBLE
+        }
+        lifecycleScope.launch {
+            settingViewModel.isWantReCreate.collect {
+                if (it) {
+                    viewModel.reCreateDataStore()
+                    rvAdapter.refresh()
+                    settingViewModel.isWantReCreate.value = false
+                    activity?.recreate()
+                }
+            }
         }
         when (type) {
             "Home" -> lifecycleScope.launch {
@@ -110,13 +130,15 @@ class GuardianFragment() : Fragment() {
             rvAdapter.loadStateFlow.collect { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
                 binding.recyclerView.isVisible = loadState.refresh !is LoadState.Loading
-                binding.tvError.isVisible = loadState.refresh is LoadState.Error
+                if(loadState.refresh is LoadState.Error){
+                    Snackbar.make(binding.root, "No Internet Connection - offline mode", Snackbar.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

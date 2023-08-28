@@ -41,15 +41,15 @@ class SettingFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             requireActivity(), Injection.provideSettingViewModelFactory(
-                requireContext().dataStore,
-                context = requireContext()
+                requireActivity().dataStore,
+                context = requireActivity()
             )
         ).get(SettingViewModel::class.java)
         lifecycle.coroutineScope.launch {
@@ -101,14 +101,12 @@ class SettingFragment : Fragment() {
         val currentDayOfMonth = myCalendar.get(Calendar.DAY_OF_MONTH)
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDayOfMonth ->
             val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDayOfMonth"
-
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-            val selectTime = simpleDateFormat.parse(selectedDate)
             if (selectedYear > 2022) {
                 Toast.makeText(requireContext(), "Invalid Date Selected", Toast.LENGTH_SHORT).show()
             } else {
                 lifecycle.coroutineScope.launch {
                     viewModel.saveToDataStore(fromDate = selectedDate)
+                    viewModel.isWantReCreate.value = true
                 }
             }
         }, currentYear, currentMonth, currentDayOfMonth).show()
@@ -252,18 +250,21 @@ class SettingFragment : Fragment() {
         dialog.findViewById<View>(R.id.btnN).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(orderBy = "newest")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnO).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(orderBy = "oldest")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btnR).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(orderBy = "relevance")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
@@ -289,18 +290,21 @@ class SettingFragment : Fragment() {
         dialog.findViewById<View>(R.id.btn5).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(numberOfItem = "5")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btn10).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(numberOfItem = "10")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
         dialog.findViewById<View>(R.id.btn15).setOnClickListener {
             lifecycle.coroutineScope.launch {
                 viewModel.saveToDataStore(numberOfItem = "15")
+                viewModel.isWantReCreate.value = true
             }
             dialog.dismiss()
         }
