@@ -1,25 +1,21 @@
 package com.example.myproj.repository
 
 
-import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
-import com.example.myproj.paggingSource.PagingMediator
+import com.example.myproj.pagingMediator.PagingMediator
 import com.example.myproj.roomDataBase.NewsDataBase
 import com.example.myproj.dataStore.PreferencesKeys
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -31,11 +27,11 @@ class GuardianRepository(
 
     @OptIn(ExperimentalPagingApi::class)
     fun getGuardianData(pageSize: Int , orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
-        Log.d("GuardianRepository", "getGuardianData: $pageSize $orderBy $fromDate ")
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                initialLoadSize = pageSize * DEFAULT_INITIAL_PAGE
             ),
             remoteMediator = PagingMediator(
                 null,
@@ -52,11 +48,11 @@ class GuardianRepository(
 
     @OptIn(ExperimentalPagingApi::class)
     fun getGuardianDataBySection(section: String, pageSize: Int, orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
-        Log.d("GuardianRepository", "getGuardianData: $pageSize $orderBy $fromDate ")
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                initialLoadSize = pageSize * DEFAULT_INITIAL_PAGE
             ),
             remoteMediator = PagingMediator(
                 section,
@@ -146,9 +142,7 @@ class GuardianRepository(
         val textSize = preferences[PreferencesKeys.textSize] ?: "Small"
         textSize
     }
-
-    val isWantReCreate : Flow<Boolean> = flow {
-        emit(false)
+    companion object {
+        internal const val DEFAULT_INITIAL_PAGE = 1000
     }
-
 }
