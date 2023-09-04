@@ -30,6 +30,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private var pageAdapter: TabLayoutPageAdapter? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(
+            this, Injection.provideSettingViewModelFactory(
+                this.dataStore, context = this
+            )
+        ).get(SettingViewModel::class.java)
+        setThemes()
+        bindViews()
+    }
+
     override fun attachBaseContext(newBase: Context?) {
         val config = changeFontScale(newBase!!)
         super.attachBaseContext(config)
@@ -53,25 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(
-            this, Injection.provideSettingViewModelFactory(
-                this.dataStore, context = this
-            )
-        ).get(SettingViewModel::class.java)
-        lifecycleScope.launch {
-            viewModel.readFromDataStoreColorTheme.collect() {
-                when (it) {
-                    "white" -> setTheme(R.style.Theme_MyProj)
-                    "skyBlue" -> setTheme(R.style.Theme_MyProjSkyBlue)
-                    "darkBlue" -> setTheme(R.style.Theme_MyProjDarkBlue)
-                    "violet" -> setTheme(R.style.Theme_MyProjViolet)
-                    "lightGreen" -> setTheme(R.style.Theme_MyProjLightGreen)
-                    "green" -> setTheme(R.style.Theme_MyProjGreen)
-                }
-            }
-        }
+    private fun bindViews() {
         supportFragmentManager.popBackStack()
         runBlocking {
             launch {
@@ -96,6 +89,21 @@ class MainActivity : AppCompatActivity() {
                 toggle.syncState()
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
                 navView(binding.navView)
+            }
+        }
+    }
+
+    private fun setThemes() {
+        lifecycleScope.launch {
+            viewModel.readFromDataStoreColorTheme.collect() {
+                when (it) {
+                    "white" -> setTheme(R.style.Theme_MyProj)
+                    "skyBlue" -> setTheme(R.style.Theme_MyProjSkyBlue)
+                    "darkBlue" -> setTheme(R.style.Theme_MyProjDarkBlue)
+                    "violet" -> setTheme(R.style.Theme_MyProjViolet)
+                    "lightGreen" -> setTheme(R.style.Theme_MyProjLightGreen)
+                    "green" -> setTheme(R.style.Theme_MyProjGreen)
+                }
             }
         }
     }

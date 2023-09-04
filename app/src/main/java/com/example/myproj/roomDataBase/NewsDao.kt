@@ -10,7 +10,7 @@ import com.example.myproj.model.ApiResult
 
 @Dao
 interface NewsDao {
-    @Insert(entity = ApiResult::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = ApiResult::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(repos: List<ApiResult>)
 
     @Query("SELECT * FROM resApi WHERE sectionId LIKE :section OR sectionName LIKE :section")

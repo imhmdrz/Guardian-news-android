@@ -24,21 +24,22 @@ class RvPagingAdapter(private val context : Context,
         @SuppressLint("SetTextI18n")
         fun bind(item: ApiResult) {
             binding.apply {
-
-                tvTitle.text = item.webTitle
-                tvSection.text = section
-                tvText.text = item.fields.trailText.replace("<.*?>".toRegex(), "")
-                val date = item.webPublicationDate.substring(0, 10)
-                val time = item.webPublicationDate.substring(11, 16)
-                tvDate.text = "$date  $time"
-                imageView.load(item.fields.thumbnail) {
-                    placeholder(R.drawable.loadingicon)
-                    error(R.drawable.erroricon)
-                }
+                bindView(item)
                 bindButton(item)
             }
         }
-
+        private fun ListItemBinding.bindView(item: ApiResult) {
+            tvTitle.text = item.webTitle
+            tvSection.text = section
+            tvText.text = item.fields.trailText.replace("<.*?>".toRegex(), "")
+            val date = item.webPublicationDate.substring(0, 10)
+            val time = item.webPublicationDate.substring(11, 16)
+            tvDate.text = "$date  $time"
+            imageView.load(item.fields.thumbnail) {
+                placeholder(R.drawable.loadingicon)
+                error(R.drawable.erroricon)
+            }
+        }
         private fun ListItemBinding.bindButton(item: ApiResult) {
             button.setOnClickListener {
                 val shareIntent = Intent()
