@@ -9,11 +9,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.myproj.dataStore.PreferencesKeys
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
 import com.example.myproj.pagingMediator.PagingMediator
 import com.example.myproj.roomDataBase.NewsDataBase
-import com.example.myproj.dataStore.PreferencesKeys
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -26,7 +26,11 @@ class GuardianRepository(
 ) {
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianData(pageSize: Int , orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
+    fun getGuardianData(
+        pageSize: Int,
+        orderBy: String,
+        fromDate: String
+    ): Flow<PagingData<ApiResult>> {
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
@@ -47,7 +51,12 @@ class GuardianRepository(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getGuardianDataBySection(section: String, pageSize: Int, orderBy :String, fromDate : String): Flow<PagingData<ApiResult>> {
+    fun getGuardianDataBySection(
+        section: String,
+        pageSize: Int,
+        orderBy: String,
+        fromDate: String
+    ): Flow<PagingData<ApiResult>> {
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,

@@ -6,11 +6,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.myproj.R
@@ -37,6 +37,7 @@ class SettingFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
@@ -61,8 +62,8 @@ class SettingFragment : Fragment() {
             }
         }
         lifecycle.coroutineScope.launch {
-            viewModel.readFromDataStoreColorTheme.collect(){
-                binding.tvColor.text=it
+            viewModel.readFromDataStoreColorTheme.collect() {
+                binding.tvColor.text = it
             }
         }
         lifecycle.coroutineScope.launch {
@@ -87,6 +88,7 @@ class SettingFragment : Fragment() {
             showDialogForTextSize()
         }
     }
+
     private fun showDatePickerDialog() {
         val myCalendar = Calendar.getInstance()
         val currentYear = myCalendar.get(Calendar.YEAR)
@@ -104,6 +106,7 @@ class SettingFragment : Fragment() {
             }
         }, currentYear, currentMonth, currentDayOfMonth).show()
     }
+
     private fun showDialogForTextSize() {
         val dialog = Dialog(requireContext())
         dialog.apply {

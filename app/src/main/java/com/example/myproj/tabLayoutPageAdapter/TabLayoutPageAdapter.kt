@@ -6,10 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.myproj.uiHolder.GuardianFragment
 
 class TabLayoutPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    override fun getCount(): Int {
-        return 5
-    }
-
+    override fun getCount(): Int = 5
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> GuardianFragment.newInstance("Home")

@@ -1,12 +1,11 @@
 package com.example.myproj.pagingMediator
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.android.codelabs.paging.db.RemoteKeys
+import com.example.myproj.roomDataBase.RemoteKeys
 import com.example.myproj.loadDataFromInternet.GuardianApiService
 import com.example.myproj.model.ApiResult
 import com.example.myproj.roomDataBase.NewsDataBase
@@ -15,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class PagingMediator(
