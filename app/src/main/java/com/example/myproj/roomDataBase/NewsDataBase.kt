@@ -7,7 +7,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.android.codelabs.paging.db.RemoteKeys
 import com.example.myproj.model.ApiResult
 import com.example.myproj.model.Converters
 
