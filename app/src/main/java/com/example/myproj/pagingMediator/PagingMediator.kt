@@ -1,4 +1,4 @@
-package com.example.myproj.paggingSource
+package com.example.myproj.pagingMediator
 
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
@@ -15,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class PagingMediator(
@@ -31,13 +32,11 @@ class PagingMediator(
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                Log.d("PagingMediator", "load 1:${LoadType.REFRESH} ")
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: 1
             }
 
             LoadType.PREPEND -> {
-                Log.d("PagingMediator", "load 2:${LoadType.PREPEND} ")
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
@@ -45,7 +44,6 @@ class PagingMediator(
             }
 
             LoadType.APPEND -> {
-                Log.d("PagingMediator", "load 3:${LoadType.APPEND} ")
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
@@ -106,21 +104,21 @@ class PagingMediator(
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { ApiResult ->
-                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id,section)
             }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ApiResult>): RemoteKeys? {
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { ApiResult ->
-                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResult.id,section)
             }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ApiResult>): RemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { ApiResultID ->
-                db.remoteKeysDao().remoteKeysRepoId(ApiResultID)
+                db.remoteKeysDao().remoteKeysRepoId(ApiResultID,section)
             }
         }
     }

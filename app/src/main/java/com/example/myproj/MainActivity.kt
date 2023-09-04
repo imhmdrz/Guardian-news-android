@@ -1,39 +1,26 @@
 package com.example.myproj
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
-import com.example.myproj.dataStore.PreferencesKeys
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.ActivityMainBinding
-import com.example.myproj.pageDrawerAdapter.PageAdapter
+import com.example.myproj.tabLayoutPageAdapter.TabLayoutPageAdapter
 import com.example.myproj.uiHolder.Injection
 import com.example.myproj.uiHolder.setting.SettingFragment
 import com.example.myproj.uiHolder.setting.SettingViewModel
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.IOException
-import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
-    private var pageAdapter: PageAdapter? = null
+    private var pageAdapter: TabLayoutPageAdapter? = null
 
     override fun attachBaseContext(newBase: Context?) {
         val config = changeFontScale(newBase!!)
@@ -51,14 +38,12 @@ class MainActivity : AppCompatActivity() {
     private fun changeFontScale(context: Context): Context {
         val configuration = context.resources.configuration
         configuration.fontScale = changeFont(context)
-        Log.d("MainActivity", "changeFontScale: ${configuration.fontScale}")
         return context.createConfigurationContext(configuration)
     }
 
     private fun changeFont(context: Context) = runBlocking {
         val str = Injection.provideSettingViewModelFactory(
-            context.dataStore,
-            context = context
+            context.dataStore, context = context
         ).create(SettingViewModel::class.java).readFromDataStoreTextSize.first()
         when (str) {
             "Small" -> 0.8f
@@ -72,13 +57,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this, Injection.provideSettingViewModelFactory(
-                this.dataStore,
-                context = this
+                this.dataStore, context = this
             )
         ).get(SettingViewModel::class.java)
         lifecycleScope.launch {
             viewModel.readFromDataStoreColorTheme.collect() {
-                Log.d("MainActivity", "onCreate: $it")
                 when (it) {
                     "white" -> setTheme(R.style.Theme_MyProj)
                     "skyBlue" -> setTheme(R.style.Theme_MyProjSkyBlue)
@@ -100,17 +83,14 @@ class MainActivity : AppCompatActivity() {
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
                 binding.apply {
-                    pageAdapter = PageAdapter(supportFragmentManager)
+                    pageAdapter = TabLayoutPageAdapter(supportFragmentManager)
                     viewPager.adapter = pageAdapter
                     tabLayout.setupWithViewPager(binding.viewPager, true)
                     viewPager.offscreenPageLimit = 5
                 }
                 drawerLayout = binding.drawerL
                 toggle = ActionBarDrawerToggle(
-                    this@MainActivity,
-                    drawerLayout,
-                    R.string.open,
-                    R.string.close
+                    this@MainActivity, drawerLayout, R.string.open, R.string.close
                 )
                 drawerLayout.addDrawerListener(toggle)
                 toggle.syncState()
@@ -152,10 +132,8 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.visibility = View.GONE
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 item.isVisible = false
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameL, SettingFragment())
-                    .addToBackStack("setting")
-                    .commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frameL, SettingFragment())
+                    .addToBackStack("setting").commit()
             }
         }
         return super.onOptionsItemSelected(item)

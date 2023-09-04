@@ -1,32 +1,22 @@
 package com.example.myproj.uiHolder
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myproj.MainActivity
 import com.example.myproj.dataStore.dataStore
 import com.example.myproj.databinding.FragmentGuardianBinding
 import com.example.myproj.model.ApiResult
 import com.example.myproj.uiHolder.Injection.provideViewModelFactory
 import com.example.myproj.uiHolder.setting.SettingViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class GuardianFragment() : Fragment() {
@@ -38,7 +28,6 @@ class GuardianFragment() : Fragment() {
                 }
             }
     }
-
     private val type: String by lazy { arguments?.getString("type") ?: "Home" }
     private lateinit var rvAdapter: RvPagingAdapter
     private lateinit var viewModel: GuardianViewModel
